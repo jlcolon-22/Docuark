@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Deadline;
+use App\Mail\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +15,9 @@ use App\Models\Deleted;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TaskFile;
 use App\Models\FileType;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class TaskerController extends Controller
 {
@@ -67,6 +72,7 @@ class TaskerController extends Controller
         $comments = Comment::where('task_id', $task_id)->orderBy('id','desc')->get();
         $task_files = TaskFile::where('task_id', $task_id)->where('file_name','!=','null')->get();
 
+
         return view('tasker.view_task',compact('find_project','find_task','comments','task_files','file_types'));
     }
 
@@ -76,7 +82,32 @@ class TaskerController extends Controller
         $comment = htmlentities($comment);
 
         Comment::create(['task_id'=> $request->task_id, 'comment'=> $comment, 'user_id' => Auth::id()]);
-        Task::where('id', $request->task_id)->update(['updated_by'=> Auth::id()]);
+
+        $task = Task::where('id', $request->task_id)->first();
+        $task->update(['updated_by'=> Auth::id()]);
+
+        $project = Project::query()->select('department_id','title')->where('id',$task->project_id)->first();
+        $data = [
+            'title'=>$project->title.' ('.$task->title.')',
+            'comment'=>$comment,
+            'user'=>Auth::user()->email
+        ];
+        $admins = User::whereHas('roles', function($q) {
+            $q->where('roles.name','admin');
+        })->get('email');
+        foreach($admins as $v)
+
+        {
+
+            Mail::to($v['email'])->send(new \App\Mail\Comment($data));
+        }
+        $departmens = User::whereHas('roles', function($q) {
+            $q->where('roles.name','!=','admin');
+        })->where('department_id',$project->department_id)->get('email');
+        foreach ($departmens as $v) {
+            Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Comment($data));
+        }
+
         return back()->with('success','Comment Successfully.');
     }
 
@@ -101,7 +132,30 @@ class TaskerController extends Controller
         $task_file->size   = $file_size;
         $task_file->save();
 
-        Task::where('id', $request->task_id)->update(['updated_by'=> Auth::id()]);
+        $task = Task::where('id', $request->task_id)->first();
+        $task->update(['updated_by'=> Auth::id()]);
+        $data = [
+            'filename'=>explode('/',$url)[1],
+            'user'=>Auth::user()->email,
+            'type'=>$request->file_type
+        ];
+        $project = Project::query()->select('department_id')->where('id',$task->project_id)->first();
+        $admins = User::whereHas('roles', function($q) {
+            $q->where('roles.name','admin');
+        })->get('email');
+        foreach($admins as $v)
+
+        {
+
+            Mail::to($v['email'])->send(new FileUpload($data));
+        }
+        $departmens = User::whereHas('roles', function($q) {
+            $q->where('roles.name','!=','admin');
+        })->where('department_id',$project->department_id)->get('email');
+        foreach ($departmens as $v) {
+            Mail::to('jlcolon368@gmail.com')->send(new FileUpload($data));
+        }
+
 
 
 

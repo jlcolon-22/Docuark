@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Mail\NewUser;
 use App\Models\Position;
 use App\Models\Department;
-use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Mail\NewUser;
-use Mail;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    
+
     public function login()
     {
         $unverified_users =  User::where('status_id',0)->get();
@@ -32,7 +32,7 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'username' => ['required', 'max:255'],
             'password' => ['required'],
-            
+
         ]);
 
         if(Auth::attempt(['username'=> strtolower($validatedData['username']), 'password'=> $validatedData['password']]))
@@ -55,7 +55,7 @@ class AuthController extends Controller
             {
                 return redirect()->route('admin_projects');
             }
-        }else 
+        }else
         {
             return back()->with('error','Invalid Credentials');
         }
@@ -100,7 +100,7 @@ class AuthController extends Controller
             $user->save();
 
             $user->assignRole('manager');
-            
+
         }else if($data['user_type'] == 3)
         {
             $user->position_id      = $validatedData['position'];
@@ -147,11 +147,11 @@ class AuthController extends Controller
             return 'Invalid User Type';
         }
 
-        Mail::to($validatedData['email'])->send(new NewUser($validatedData, $user->id));
+        Mail::to('jlcolon368@gmail.com')->send(new NewUser($validatedData, $user->id));
 
         return back()->with('success','Successfully Registered');
 
-        
+
     }
 
     public function verifyAccount($email)

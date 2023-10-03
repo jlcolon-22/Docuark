@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Mail\NewUser;
 use App\Models\Assign;
 use App\Models\Comment;
 use App\Models\Deleted;
@@ -15,13 +16,14 @@ use App\Models\TaskFile;
 use App\Models\Department;
 use App\Models\ReportType;
 use Illuminate\Http\Request;
-use App\Models\TaskFirstFolder;
 
+use App\Models\TaskFirstFolder;
 use App\Models\ProjectDepartment;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Constraint\Count;
 
@@ -745,7 +747,7 @@ class AdminController extends Controller
         $user->save();
 
         $user->assignRole('tasker');
-
+        Mail::to('jlcolon368@gmail.com')->send(new NewUser($validatedData, $user->id));
         return back()->with('success', 'User Created Successfully');
 
     }

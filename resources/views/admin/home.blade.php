@@ -411,13 +411,13 @@
         var myemail = $(this).val();
 
 
-        if (!/@su.edu.ph\s*$/.test(myemail)) {
-           console.log("Email need an offcial @su.edu.ph");
-           $(".submit_user").attr("disabled", "disabled")
+        // if (!/@su.edu.ph\s*$/.test(myemail)) {
+        //    console.log("Email need an offcial @su.edu.ph");
+        //    $(".submit_user").attr("disabled", "disabled")
 
-        }else {
-          $(".submit_user").removeAttr("disabled");
-        }
+        // }else {
+        //   $(".submit_user").removeAttr("disabled");
+        // }
       });
 
     });

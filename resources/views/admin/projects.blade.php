@@ -58,10 +58,10 @@
                                     data-bs-target="#createModal">New Report task compilation</button>
                             @endif
 
-                            {{-- @if (Auth::user()->getRoleNames()[0] == 'manager')
+                            @if (Auth::user()->getRoleNames()[0] == 'manager')
                                 <button class="btn btn-info btn-xs edit" data-bs-toggle="modal"
                                     data-bs-target="#createModalUser">New user Profile</button>
-                            @endif --}}
+                            @endif
 
                             @include('shared.notification')
                         </div>

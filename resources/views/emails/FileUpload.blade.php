@@ -1,18 +1,12 @@
 
-@component('mail::panel')
+@component('mail::message')
 
-User:
-<br>
-{{strtolower($data['user'])}}
+<h5>User:</h5> {{strtolower($data['user'])}}
 <br>
 <br>
-Filename:
-<br>
-{{strtolower($data['filename'])}}
+<h5>Filename:</h5> {{strtolower($data['filename'])}}
 <br>
 <br>
-Type:
-<br>
-{{$data['type']}}
+<h5>Type:</h5> {{$data['type']}}
 @endcomponent
 

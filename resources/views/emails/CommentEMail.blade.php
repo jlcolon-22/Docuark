@@ -1,19 +1,13 @@
 
 
-@component('mail::panel')
+@component('mail::message')
 
-User:
-<br>
-{{strtolower($data['user'])}}
+<h5>User:</h5> {{strtolower($data['user'])}}
 <br>
 <br>
-Task:
-<br>
-{{strtolower($data['title'])}}
+<h5>Task:</h5> {{strtolower($data['title'])}}
 <br>
 <br>
-comment:
-<br>
-{{$data['comment']}}
+<h5>Comment:</h5> {{$data['comment']}}
 @endcomponent
 

@@ -45,16 +45,18 @@
     <div class="container-fluid py-4">
 
       <div class="row">
+
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
+                @include('shared.notification')
               Department List
 
             </div>
             <div class="card-body px-0 pt-0 pb-2">
-             <div class="container">
+             <div class="px-4 pt-2">
               <button data-bs-toggle="modal" data-bs-target="#departmentModal" class="btn btn-primary btn-xs">New</button>
-              <table class="table align-items-center mb-0">
+              <table class="table  w-100 mb-0">
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
@@ -75,7 +77,7 @@
                           </div>
                         </div>
                       </td>
-                      <td>
+                      <td class="d-flex justify-content-center">
                         <button class="btn btn-danger btn-xs deleteDepartment" data-bs-toggle="modal"
                         data-bs-target="#deleteDepartment"
                         value="{{ $dept->id }}" >Delete</button>
@@ -93,7 +95,7 @@
       </div>
       <div class="row">
 
-        @include('shared.notification')
+
 
        <!--  <div class="col-4">
           <div class="card mb-4">

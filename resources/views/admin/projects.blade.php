@@ -124,16 +124,16 @@
                                                 <td class="align-middle text-center">
                                                     @if (Auth::user()->getRoleNames()[0] == 'manager_limited')
                                                         <span
-                                                            class="text-secondary text-xs font-weight-bold">{{ Auth::user()->first_name }}
-                                                            {{ Auth::user()->last_name }}</span>
+                                                            class="text-secondary  text-xs font-weight-bold">{{ ucfirst(Auth::user()->first_name) }}
+                                                            {{ ucfirst(Auth::user()->last_name) }}</span>
                                                     @elseif(Auth::user()->getRoleNames()[0] == 'manager_limited')
                                                         <span
                                                             class="text-secondary text-xs font-weight-bold">{{ Auth::user()->first_name }}
                                                             {{ Auth::user()->last_name }}</span>
                                                     @else
                                                         <span
-                                                            class="text-secondary text-xs font-weight-bold">{{ Auth::user()->first_name }}
-                                                            {{ Auth::user()->last_name }}</span>
+                                                            class="text-secondary  text-xs font-weight-bold">{{ ucfirst(Auth::user()->first_name) }}
+                                                            {{ ucfirst(Auth::user()->last_name) }}</span>
                                                     @endif
 
                                                 </td>
@@ -206,7 +206,7 @@
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteProjectModal"
                                                             value="{{ $proj->id }}"
-                                                            style="width: 90px">DELETE</button>
+                                                            style="width: 90px">Delete</button>
                                                     @endif
 
                                                 </td>

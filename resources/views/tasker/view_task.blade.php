@@ -50,11 +50,18 @@
 
               <div class="d-flex justify-content-between">
                     <div>
-                        <h3>Report Title: {{$find_project->title}}</h3>
+                            <h3>Report Title: {{$find_project->title}}</h3>
+
                         <h6>Report description</h6>
                     </div>
+                    @role('tasker')
+                    <a href="/tasker/{{ $find_project->id }}/task-list-tasker" style="height: fit-content" class="btn btn-danger btn-xs">Back to task list</a>
+                    @endrole
                     @role('admin')
-                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn btn-danger btn-xs" style="height: fit-content">back to task list</a>
+                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn btn-danger btn-xs" style="height: fit-content">Back to task list</a>
+                    @endrole
+                    @role('manager')
+                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn btn-danger btn-xs" style="height: fit-content">Back to task list</a>
                     @endrole
 
 

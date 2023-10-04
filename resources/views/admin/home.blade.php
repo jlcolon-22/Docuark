@@ -107,7 +107,7 @@
 
                       </td>
                        <td>
-                        <p class="text-xs font-weight-bold mb-0">{{$user->username}}</p>
+                        <p class="text-xs font-weight-bold mb-0">{{ucfirst(explode('.',$user->username)[0]).'.'.ucfirst(explode('.',$user->username)[1])}}</p>
 
                       </td>
 

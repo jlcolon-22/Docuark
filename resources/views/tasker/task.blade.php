@@ -47,7 +47,10 @@
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
-              <h6>Project Lists</h6>
+              <div class="d-flex justify-content-between">
+                <h6>Project Lists</h6>
+                <a href="/tasker/home" class="btn btn-danger btn-xs">Back</a>
+              </div>
               <h5>{{$department_name->name}}</h5>
               @include('shared.notification')
             </div>

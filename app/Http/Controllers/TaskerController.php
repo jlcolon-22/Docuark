@@ -134,12 +134,14 @@ class TaskerController extends Controller
 
         $task = Task::where('id', $request->task_id)->first();
         $task->update(['updated_by'=> Auth::id()]);
+        $project = Project::query()->select('department_id','title')->where('id',$task->project_id)->first();
         $data = [
             'filename'=>explode('/',$url)[1],
             'user'=>Auth::user()->email,
-            'type'=>$request->file_type
+            'type'=>$request->file_type,
+            'task'=>$project->title.'('.$task->title.')'
         ];
-        $project = Project::query()->select('department_id')->where('id',$task->project_id)->first();
+
         $admins = User::whereHas('roles', function($q) {
             $q->where('roles.name','admin');
         })->get('email');

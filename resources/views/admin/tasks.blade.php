@@ -72,7 +72,10 @@
 
               @if($find_project->status_id == 1)
                 @if(Auth::user()->getRoleNames()[0] == 'admin')
-                  <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">Add Task</button>
+                 <div class="d-flex justify-content-between">
+                    <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">Add Task</button>
+                    <a href="/admin/projects" class="btn btn-danger btn-xs">Back</a>
+                 </div>
                 @endif
               @endif
 

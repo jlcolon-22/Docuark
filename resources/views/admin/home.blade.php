@@ -36,7 +36,7 @@
 
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto " style="height: fit-content" id="sidenav-collapse-main">
       @include('shared.side')
     </div>
 
@@ -259,8 +259,8 @@
                   <div class="mb-3">
 
                     <label>Select Department <span style="color: red; margin-bottom: -10px;">*</span></label>
-                    <select class="form-control" name="department" required id="department_create">
-                      <option value="0"></option>
+                    <select class="form-select" name="department" required id="department_create">
+                      <option value="" selected></option>
                        @foreach($departments as $dept)
                         <option value="{{$dept->id}}">{{$dept->name}}</option>
                       @endforeach
@@ -411,13 +411,13 @@
         var myemail = $(this).val();
 
 
-        // if (!/@su.edu.ph\s*$/.test(myemail)) {
-        //    console.log("Email need an offcial @su.edu.ph");
-        //    $(".submit_user").attr("disabled", "disabled")
+        if (!/@su.edu.ph\s*$/.test(myemail)) {
+           console.log("Email need an offcial @su.edu.ph");
+           $(".submit_user").attr("disabled", "disabled")
 
-        // }else {
-        //   $(".submit_user").removeAttr("disabled");
-        // }
+        }else {
+          $(".submit_user").removeAttr("disabled");
+        }
       });
 
     });

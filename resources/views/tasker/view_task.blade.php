@@ -34,7 +34,7 @@
       </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto " style="height: fit-content" id="sidenav-collapse-main">
       @include('shared.side')
     </div>
 
@@ -276,7 +276,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Sub Report description</h4>
+          <h4 class="modal-title">Sub Task Information</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -287,20 +287,20 @@
         @csrf
         <input type="hidden" name="task_id" value="{{Request::segment(3)}}">
         <div class="mb-3">
-          <label>Report Name</label>
+          <label>Report Name <span style="color: red; margin-bottom: -10px;">*</span></label>
           <input type="text" class="form-control" placeholder="Name" aria-label="Name" name="title" required id="name">
         </div>
         <div class="mb-3">
-          <label>Report Description</label>
+          <label>Report Description <span style="color: red; margin-bottom: -10px;">*</span></label>
           <textarea class="form-control" name="description" required></textarea>
         </div>
         <div class="mb-3">
-          <label>Report Deadline</label>
+          <label>Report Deadline <span style="color: red; margin-bottom: -10px;">*</span></label>
           <input type="date" class="form-control" name="deadline" required >
         </div>
         <div class="mb-3">
-          <label>Report Type</label>
-           <select class="form-control" required>
+          <label>Report Type <span style="color: red; margin-bottom: -10px;">*</span></label>
+           <select class="form-select" required>
             @foreach($file_types as $file)
               <option>{{$file->name}}</option>
             @endforeach
@@ -308,7 +308,7 @@
            </select>
           </div>
         <div class="mb-3">
-          <label>Report File</label>
+          <label>Report File <span style="color: gray; margin-bottom: -10px;">(optional)</span></label>
           <input type="file" name="task_file" class="form-control">
         </div>
 

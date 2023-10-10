@@ -1,4 +1,4 @@
-<ul class="navbar-nav">
+<ul class="navbar-nav" style="height: fit-content">
       @if(Auth::user()->getRoleNames()[0] == 'admin')
         <li class="nav-item">
           <a class="nav-link " href="{{route('admin_home')}}">

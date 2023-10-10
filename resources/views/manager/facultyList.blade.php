@@ -67,6 +67,10 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h6>Faculty Member Table</h6>
+              @if (Auth::user()->getRoleNames()[0] == 'manager')
+              <button class="btn btn-info btn-xs edit" data-bs-toggle="modal"
+                  data-bs-target="#createModalUser">New user Profile</button>
+          @endif
               {{-- <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">New user Profile</button> --}}
               @include('shared.notification')
             </div>
@@ -222,7 +226,69 @@
     </div>
   </div>
 </div>
+<div class="modal" id="createModalUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">New User Profile Information</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form role="form" action="{{ route('admin_create_faculty') }}" method="POST">
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    @csrf
+
+                    <div class="mb-3">
+                        <label>First Name <span style="color: red; margin-bottom: -10px;">*</span></label>
+                        <input type="text" class="form-control" placeholder="First Name" aria-label="Name"
+                            name="first_name" required id="firstName1">
+                    </div>
+                    <div class="mb-3">
+                        <label>Last Name <span style="color: red; margin-bottom: -10px;">*</span></label>
+                        <input type="text" class="form-control" placeholder="Last Name" aria-label="Name"
+                            name="last_name" required id="lastName1">
+                    </div>
+                    <div class="mb-3">
+                        <label>Email must be valid (@su.edu.ph) format <span
+                                style="color: red; margin-bottom: -10px;">*</span></label>
+                        <input type="email" class="form-control email_create" placeholder="Email"
+                            aria-label="Email" name="email" required id="email">
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label>Enter Password <span style="color: red; margin-bottom: -10px;">*</span></label>
+                        <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                            name="password">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Re-Enter Password <span style="color: red; margin-bottom: -10px;">*</span></label>
+                        <input type="password" class="form-control" placeholder="Repeat Password"
+                            aria-label="Password" name="repeat_password" required>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit"
+                            class="btn bg-gradient-dark w-100 my-4 mb-2 submit_user">Submit</button>
+                    </div>
+
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 {{-- <div class="modal" id="createModal">
     <div class="modal-dialog">
       <div class="modal-content">

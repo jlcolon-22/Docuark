@@ -58,7 +58,7 @@ text-wrap:wrap;
             </a>
         </div>
         <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+        <div class="collapse navbar-collapse  w-auto " style="height: fit-content" id="sidenav-collapse-main">
             @include('shared.side')
         </div>
 

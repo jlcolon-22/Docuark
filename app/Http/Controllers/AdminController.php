@@ -463,7 +463,7 @@ class AdminController extends Controller
     public function deleteTask(Request $request)
     {
         $find_task = Task::find($request->task_id);
-        File::deleteDirectory(public_path($find_task->title));
+        // File::deleteDirectory(public_path($find_task->title));
         if(!$find_task)
         {
             return back()->with('error','Task Not Found');

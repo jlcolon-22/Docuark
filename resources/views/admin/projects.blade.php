@@ -39,7 +39,7 @@
             </a>
         </div>
         <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+        <div class="collapse navbar-collapse  w-auto " style="height: fit-content" id="sidenav-collapse-main">
             @include('shared.side')
         </div>
 
@@ -58,10 +58,7 @@
                                     data-bs-target="#createModal">New Report task compilation</button>
                             @endif
 
-                            @if (Auth::user()->getRoleNames()[0] == 'manager')
-                                <button class="btn btn-info btn-xs edit" data-bs-toggle="modal"
-                                    data-bs-target="#createModalUser">New user Profile</button>
-                            @endif
+
 
                             @include('shared.notification')
                         </div>
@@ -242,13 +239,13 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label>Report Deadline</label>
+                            <label>Report Deadline <span style="color: red; margin-bottom: -10px;">*</span></label>
                             <input type="date" class="form-control" name="deadline" required>
                         </div>
 
                         <div class="mb-3">
-                            <label>Report Type</label>
-                            <select class="form-control" required name="project_type">
+                            <label>Report Type <span style="color: red; margin-bottom: -10px;">*</span></label>
+                            <select class="form-select" required name="project_type">
                                 @foreach ($report_types as $rep)
                                     <option value="{{ $rep->name }}">{{ $rep->name }}</option>
                                 @endforeach
@@ -257,8 +254,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Select Assigned Department</label>
-                            <select class="form-control" name="department_id" required>
+                            <label>Select Assigned Department <span style="color: red; margin-bottom: -10px;">*</span></label>
+                            <select class="form-select" name="department_id" required>
                                 <option></option>
                                 @foreach ($departments as $dept)
                                     <option value="{{ $dept->id }}">{{ $dept->name }}</option>
@@ -267,12 +264,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Report Name</label>
+                            <label>Report Name <span style="color: red; margin-bottom: -10px;">*</span></label>
                             <input type="text" class="form-control" placeholder="Name" aria-label="Name"
                                 name="title" required id="name">
                         </div>
                         <div class="mb-3">
-                            <label>Report Description</label>
+                            <label>Report Description <span style="color: red; margin-bottom: -10px;">*</span></label>
                             <textarea class="form-control" name="description" required></textarea>
                         </div>
 

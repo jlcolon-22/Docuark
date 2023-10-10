@@ -34,7 +34,7 @@
       </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto " style="height: fit-content" style="height: fit-content" id="sidenav-collapse-main">
       @include('shared.side')
     </div>
 
@@ -80,13 +80,13 @@
               @endif
 
               <h3 class="text-center">{{$find_assign_project->project->project_type}} to {{isset($find_assign_project->department->name) ? 'Task of '.$find_assign_project->department->name : 'None'}}</h3>
-              <p>Arrange By: </p>
+              <p>Show: </p>
               <form  id="arrangeForm" action="" method="GET">
                 @csrf
                 <select id="arrangeSelect" name="arrange_by">
                   <option>Select Here</option>
-                  <option value="Normal">All Task</option>
-                  <option value="Sub-Task">Sub-Task</option>
+                  <option value="Normal">Main Task Only</option>
+                  <option  value="Sub-Task">With SubTask</option>
                 </select>
               </form>
               @include('shared.notification')
@@ -212,20 +212,20 @@
         @csrf
         <input type="hidden" name="project_id" value="{{Request::segment(2)}}">
         <div class="mb-3">
-          <label>Task Name</label>
+          <label>Task Name <span style="color: red; margin-bottom: -10px;">*</span></label>
           <input type="text" class="form-control" placeholder="Name" aria-label="Name" name="title" required id="name">
         </div>
         <div class="mb-3">
-          <label>Task Description</label>
+          <label>Task Description <span style="color: red; margin-bottom: -10px;">*</span></label>
           <textarea class="form-control" name="description" required></textarea>
         </div>
         <div class="mb-3">
-          <label>Task Deadline</label>
+          <label>Task Deadline <span style="color: red; margin-bottom: -10px;">*</span></label>
           <input type="date" class="form-control" name="deadline" required >
         </div>
         <div class="mb-3">
-          <label>Task Type</label>
-           <select class="form-control" required name="file_type">
+          <label>Task Type <span style="color: red; margin-bottom: -10px;">*</span></label>
+           <select class="form-select" required name="file_type">
             @foreach($file_types as $file)
               <option value="{{$file->name}}">{{$file->name}}</option>
             @endforeach
@@ -233,7 +233,7 @@
            </select>
           </div>
         <div class="mb-3">
-          <label>Task File</label>
+          <label>Task File <span style="color: gray; margin-bottom: -10px;">(optional)</span></label>
           <input type="file" name="task_file" class="form-control">
         </div>
 

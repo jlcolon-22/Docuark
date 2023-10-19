@@ -329,8 +329,8 @@ class AdminController extends Controller
 
     public function folders_files(Task $id)
     {
-
-        $folder_files = TaskFile::where('task_id',$id->id)->where('user_id',Auth::id())->where('size','!=','null')->get();
+        // ->where('user_id',Auth::id())
+        $folder_files = TaskFile::where('task_id',$id->id)->where('size','!=','null')->get();
         $project_id = $id->project_id;
 
         return view('admin.folder_files',compact('folder_files','project_id'));
@@ -527,7 +527,7 @@ class AdminController extends Controller
 
         $find_project->update(['status_id'=> 2]);
         Task::where('project_id', $find_project->id)->update(['status_id'=>2]);
-        return back()->with('success', 'Project '.$find_project->title.' Completed Successfully');
+        return back()->with('success',$find_project->title.' has been marked as Completed!');
     }
 
     public function system_maintenance()

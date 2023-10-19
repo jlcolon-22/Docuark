@@ -23,7 +23,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
     <aside
         class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
         id="sidenav-main">
@@ -55,16 +55,16 @@
                             <h6>List of report task compilation</h6>
                             @if (Auth::user()->getRoleNames()[0] == 'admin')
                                 <button class="btn btn-info btn-xs edit" data-bs-toggle="modal"
-                                    data-bs-target="#createModal">New Report task compilation</button>
+                                    data-bs-target="#createModal">New Report Task Compilation</button>
                             @endif
 
 
 
                             @include('shared.notification')
                         </div>
-                        <div class="card-body px-0 pt-0 pb-2" >
-                            <div class="table-responsive " style="padding: 10px">
-                                <table class="table align-items-center mb-0 display" id="example" style="width:100%">
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive " style="padding: 10px;">
+                                <table class="table align-items-center mb-0 display" id="example" style="width:100% ">
                                     <thead>
                                         <tr>
                                             <th
@@ -109,12 +109,13 @@
 
                                                 <td class="align-middle text-center text-sm">
                                                     @if ($proj->status_id == 1)
-                                                        <span class="badge badge-sm bg-gradient-success">Active</span>
+                                                        <span style="color: #70AD47;font-weight:bold">Active</span>
                                                     @elseif($proj->status_id == 0)
-                                                        <span class="badge badge-sm bg-gradient-danger">Archived</span>
+                                                        <span class="badge badge-sm bg-secondary">Archived</span>
                                                     @elseif($proj->status_id == 2)
-                                                        <span
-                                                            class="badge badge-sm bg-gradient-secondary">Completed</span>
+                                                        {{-- <span
+                                                            class="badge badge-sm bg-gradient-secondary">Completed</span> --}}
+                                                        <span class="text-secondary" style="font-weight:bold">Completed</span>
                                                     @endif
 
                                                 </td>
@@ -154,16 +155,20 @@
                                                 <td class="align-middle">
 
 
-                                                    @if ($proj->status_id == 1)
+                                                    @if ($proj->status_id == 0)
+                                                        <button class="btn btn-success btn-xs archive"
+                                                            data-bs-toggle="modal" data-bs-target="#statusModal"
+                                                            value="{{ $proj->id }}"
+                                                            style="width: 90px">Activate</button>
+                                                    @elseif($proj->status_id == 1)
                                                         @if (Auth::user()->getRoleNames()[0] != 'manager_limited')
-                                                            <button class="btn btn-default btn-xs completed"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#completedModal"
+                                                            <button class="btn btn-secondary btn-xs completed"
+                                                                data-bs-toggle="modal" data-bs-target="#completedModal"
                                                                 value="{{ $proj->id }}"
                                                                 style="width: 90px">Completed</button>
                                                             <a href="{{ route('admin_task_list', $proj->id) }}"
-                                                                class="btn btn-warning btn-xs"
-                                                                style="width: 90px">View Task</a>
+                                                                class="btn btn-xs text-white"
+                                                                style="width: 90px;background:#000000">View Task</a>
                                                             <!--  <button class="btn btn-primary btn-xs assign" data-bs-toggle="modal" data-bs-target="#assignsModal" value="{{ $proj->id }}">Assign Department</button> -->
                                                         @endif
 
@@ -174,36 +179,30 @@
                                                                 style="width: 90px">Edit</button>
                                                             <!-- <button class="btn btn-danger btn-xs archive" data-bs-toggle="modal" data-bs-target="#statusModal" value="{{ $proj->id }}" style="width: 90px">Archive</button> -->
                                                         @endif
-                                                    @elseif($proj->status_id == 0)
-                                                        <button class="btn btn-success btn-xs archive"
-                                                            data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                            value="{{ $proj->id }}"
-                                                            style="width: 90px">Activate</button>
                                                     @elseif($proj->status_id == 2)
-                                                        <a href="{{ route('admin_task_list', $proj->id) }}"
-                                                            class="btn btn-warning btn-xs" style="width: 90px">View
-                                                            Task</a>
-                                                        <button class="btn btn-success btn-xs archive"
+                                                    <button class="btn btn-success btn-xs archive"
                                                             data-bs-toggle="modal" data-bs-target="#statusModal"
                                                             value="{{ $proj->id }}"
                                                             style="width: 90px">Activate</button>
 
-                                                       @if (Auth::user()->getRoleNames()[0] == 'admin')
+                                                        <a href="{{ route('admin_task_list', $proj->id) }}"
+                                                            class="btn text-white btn-xs"
+                                                            style="width: 90px;background:#000000">View
+                                                            Task</a>
 
-                                                       <button class="btn btn-danger btn-xs archive2"
-                                                       data-bs-toggle="modal" data-bs-target="#statusModal2"
-                                                       value="{{ $proj->id }}"
-                                                       style="width: 90px">Archive</button>
-                                                       @endif
-
-
+                                                        @if (Auth::user()->getRoleNames()[0] == 'admin')
+                                                            <button class="btn btn-secondary btn-xs archive2"
+                                                                data-bs-toggle="modal" data-bs-target="#statusModal2"
+                                                                value="{{ $proj->id }}"
+                                                                style="width: 90px">Archive</button>
+                                                        @endif
                                                     @endif
                                                     @if (Auth::user()->getRoleNames()[0] == 'admin')
-                                                        <button class="btn btn-default btn-sm deleteAllProject"
+                                                        <button class="btn btn-danger btn-sm deleteAllProject"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteProjectModal"
                                                             value="{{ $proj->id }}"
-                                                            style="width: 90px">Delete</button>
+                                                            style="width: fit-content">Delete</button>
                                                     @endif
 
                                                 </td>
@@ -254,7 +253,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Select Assigned Department <span style="color: red; margin-bottom: -10px;">*</span></label>
+                            <label>Select Assigned Department <span
+                                    style="color: red; margin-bottom: -10px;">*</span></label>
                             <select class="form-select" name="department_id" required>
                                 <option></option>
                                 @foreach ($departments as $dept)
@@ -536,8 +536,8 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn bg-gradient-primary">Yes</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger text-white">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
 

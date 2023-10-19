@@ -22,12 +22,12 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300 position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" # " target="_blank">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="{{URL::to('/assets/img/logo-ct-dark.png')}}" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
         <br />
         <span class="ms-1 font-weight-bold" >{{Auth::user()->department->name}}</span>
@@ -49,7 +49,7 @@
             <div class="card-header pb-0">
               <div class="d-flex justify-content-between">
                 <h6>List of Files</h6>
-                <a href="/admin/{{ $project_id }}/task-files" class="btn btn-danger">Back </a>
+                <a href="/admin/{{ $project_id }}/task-files" class="btn text-white btn-xs" style="background:#000000">Back </a>
               </div>
 
               @include('shared.notification')
@@ -68,12 +68,15 @@
                           ?>
 
                         </p>
-                        <button type="submit" class="btn btn-danger btn-xs">DOWNLOAD</button>
+                        <button type="submit" class="btn btn-dark btn-xs">DOWNLOAD</button>
 
                          @if($file->user_id == Auth::id())
-                          <a href="{{route('delete_files',$file->id)}}" class="btn btn-default">
-                            REMOVE
-                          </a>
+                         {{-- href="{{route('delete_files',$file->id)}}" --}}
+                         <button type="button" class="btn btn-danger btn-xs remove-file"  data-bs-toggle="modal"
+                        data-bs-target="#deleteFile"
+                        value="{{ $file->id }}">
+                          REMOVE
+                        </button>
                         @endif
                       </form>
 
@@ -87,7 +90,35 @@
 
     </div>
   </main>
+  <div class="modal" id="deleteFile">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title h6">Are you sure to delete?               </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form role="form" action="{{ route('delete_files') }}" method="POST">
+                @csrf
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    @csrf
+                    <input type="hidden" name="id" id="remove_file_id">
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger text-white">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
   <!--   Core JS Files   -->
   <script src="{{URL::to('/assets/js/core/popper.min.js')}}"></script>
@@ -112,7 +143,10 @@
     $(document).ready(function(){
       var find_project_url = "{{route('admin_find_projects')}}";
       var token = "{{Session::token()}}";
-
+      $(".remove-file").click(function(){
+          var file_id = $(this).val();
+          $("#remove_file_id").val(file_id);
+      });
       $(".archive").click(function(){
         var project_id = $(this).val();
         $("#statusProjectId").val(project_id);

@@ -26,7 +26,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Navbar -->
-        
+
         <!-- End Navbar -->
       </div>
     </div>
@@ -43,7 +43,7 @@
                     <img src="{{URL::to('logo.png')}}">
                   </center>
                   <h4 class="font-weight-bolder text-center">Sign In</h4>
-                  
+
                   @include('shared.notification')
                 </div>
                 <div class="card-body">
@@ -60,16 +60,16 @@
                       <label class="form-check-label" for="rememberMe">Remember me</label>
                     </div>
                     <div class="text-center">
-                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-60 mt-4 mb-0">Sign in</button>
+                      <button type="submit" class="btn btn-lg btn-lg text-white w-60 mt-4 mb-0" style="background: #000000">Sign in</button>
                     </div>
                   </form>
                 </div>
                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  
+
                 </div>
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>

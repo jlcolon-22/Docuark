@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300 position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -111,9 +111,9 @@
 
                       <td class="align-middle text-center text-sm">
                        @if($task->status_id == 1)
-                          <span class="badge badge-sm bg-gradient-info">Active</span>
+                          <span  style="color: #70AD47;font-weight:bold">Active</span>
                         @elseif($task->status_id == 0)
-                          <span class="badge badge-sm bg-gradient-danger">Inactive</span>
+                          <span style="color: #FF0000;font-weight:bold">Inactive</span>
                         @elseif($task->status_id == 3)
                           <span class="badge badge-sm bg-gradient-success">Completed</span>
                         @endif
@@ -140,7 +140,7 @@
                           @if($task->status_id == 1)
                             <button class="btn btn-primary btn-xs archive" data-bs-toggle="modal" data-bs-target="#statusModal" value="{{$task->id}}">Archive</button>
 
-                             <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-info btn-xs">View Task</a>
+                             <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn text-white btn-xs" style="background:#000000">View Task</a>
 
                             <button class="btn btn-danger btn-xs delete"  data-bs-toggle="modal" data-bs-target="#deleteModal" value="{{$task->id}}">Delete</button>
 
@@ -171,9 +171,9 @@
 
                         <td class="align-middle text-center text-sm">
                          @if($task->status_id == 1)
-                            <span class="badge badge-sm bg-gradient-info">Active</span>
+                            <span style="color: #70AD47;font-weight:bold">Active</span>
                           @elseif($task->status_id == 0)
-                            <span class="badge badge-sm bg-gradient-danger">Inactive</span>
+                            <span tyle="color: #FF0000;font-weight:bold">Inactive</span>
                           @elseif($task->status_id == 3)
                             <span class="badge badge-sm bg-gradient-success">Completed</span>
                           @endif

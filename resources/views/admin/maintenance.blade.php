@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -55,7 +55,7 @@
             </div>
             <div class="card-body px-0 pt-0 pb-2">
              <div class="px-4 pt-2">
-              <button data-bs-toggle="modal" data-bs-target="#departmentModal" class="btn btn-primary btn-xs">New</button>
+              <button data-bs-toggle="modal" data-bs-target="#departmentModal" class="btn btn-info btn-xs">New</button>
               <table class="table  w-100 mb-0">
                   <thead>
                     <tr>
@@ -231,7 +231,7 @@
             <div class="card-header pb-0">
               Report Type
               <br>
-              <button data-bs-toggle="modal" data-bs-target="#reportModal" class="btn btn-primary btn-xs">New</button>
+              <button data-bs-toggle="modal" data-bs-target="#reportModal" class="btn btn-info btn-xs">New</button>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
@@ -274,7 +274,7 @@
             <div class="card-header pb-0">
               Task File Type
               <br>
-              <button data-bs-toggle="modal" data-bs-target="#fileModal" class="btn btn-primary btn-xs">New</button>
+              <button data-bs-toggle="modal" data-bs-target="#fileModal" class="btn btn-info btn-xs">New</button>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
@@ -459,8 +459,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a id="department_id" href="" class="btn bg-gradient-primary">Yes</a>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <a id="department_id" href="" class="btn bg-danger text-white">Delete</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
 
@@ -487,8 +487,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a id="report_id" href="" class="btn bg-gradient-primary">Yes</a>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <a id="report_id" href="" class="btn bg-danger text-white">Delete</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
 
@@ -515,8 +515,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a id="file_id" href="" class="btn bg-gradient-primary">Yes</a>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <a id="file_id" href="" class="btn bg-danger text-white">Delete</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
 

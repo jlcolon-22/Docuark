@@ -22,12 +22,12 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="# " target="_blank">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="{{ URL::to('logo-red.png') }}" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
         <br />
 
@@ -67,7 +67,7 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h6>Users Profile Table</h6>
-              <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">New user Profile</button>
+              <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">New User Profile</button>
               @include('shared.notification')
             </div>
             <div class="card-body px-0 pt-0 pb-2">
@@ -96,7 +96,7 @@
                       <td>
                         <p class="text-xs font-weight-bold mb-0">
                           @if($user->getRoleNames()[0] == 'admin')
-                            {{strtoupper('OI') }}
+                            {{strtoupper('OI Office Coordinator') }}
                           @elseif($user->getRoleNames()[0] == 'manager')
                           {{strtoupper('College Administrator')}}
 
@@ -113,7 +113,8 @@
 
 
                       <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-info" style="width: 300px">{{$user->department->name}}</span>
+                        {{-- <span class="badge badge-sm bg-gradient-info" style="width: 300px">{{$user->department->name}}</span> --}}
+                        {{$user->department->name}}
                       </td>
 
                       <td class="align-middle">
@@ -178,17 +179,18 @@
                     <input type="password" class="form-control" placeholder="Password" aria-label="Password" name="password">
                   </div>
 
-                  <div class="text-center">
-                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Submit</button>
+                  <div  class="d-flex justify-content-end align-items-center gap-2 ">
+                    <button type="submit" class="btn bg-info text-white style="width: fit-content">Submit</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                   </div>
 
 
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        {{-- <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
+        </div> --}}
         </form>
 
       </div>
@@ -214,8 +216,8 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Submit</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
       </form>
 
@@ -273,7 +275,7 @@
 
                     <label>Select User Type <span style="color: red; margin-bottom: -10px;">*</span></label>
                     <select name="user_type" class="form-control">
-                      <option value="1">OI</option>
+                      <option value="1">OI Office Coordinator</option>
                       <option value="2">College Administrator</option>
                     </select>
 
@@ -293,17 +295,18 @@
                     <input type="password" class="form-control" placeholder="Repeat Password" aria-label="Password" name="repeat_password" required>
                   </div>
 
-                  <div class="text-center">
-                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2 submit_user">Submit</button>
+                  <div class="d-flex justify-content-end align-items-center gap-2 " >
+                    <button type="submit" style="width: fit-content" class="btn bg-info text-white  submit_user ">Submit</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                   </div>
 
 
         </div>
 
-        <!-- Modal footer -->
+        {{-- <!-- Modal footer -->
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
+        </div> --}}
         </form>
 
       </div>

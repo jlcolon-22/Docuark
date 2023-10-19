@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -76,11 +76,11 @@
 
                       <td>
                         @if($task->status_id == 1)
-                          <span class="badge badge-sm bg-gradient-info">Active</span>
+                          <span class="badge badge-sm text-success font-weight-bold">Active</span>
                         @elseif($task->status_id == 0)
-                          <span class="badge badge-sm bg-gradient-danger">Inactive</span>
+                          <span class="badge badge-sm text-danger font-weight-bold" style="">Inactive</span>
                         @elseif($task->status_id == 2)
-                          <span class="badge badge-sm bg-gradient-success">Completed</span>
+                          <span class="badge badge-sm text-secondary font-weight-bold">Completed</span>
                         @endif
 
                       </td>

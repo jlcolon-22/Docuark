@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -74,12 +74,12 @@
                 @if(Auth::user()->getRoleNames()[0] == 'admin')
                  <div class="d-flex justify-content-between">
                     <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">Add Task</button>
-                    <a href="/admin/projects" class="btn btn-danger btn-xs">Back</a>
+                    <a href="/admin/projects" class="btn text-white btn-xs" style="background:#000000">Back</a>
                  </div>
                 @endif
               @endif
 
-              <h3 class="text-center">{{$find_assign_project->project->project_type}} to {{isset($find_assign_project->department->name) ? 'Task of '.$find_assign_project->department->name : 'None'}}</h3>
+              <h3 class="text-center">{{$find_assign_project->project->project_type}} to {{isset($find_assign_project->department->name) ? ' Task of '.$find_assign_project->department->name : 'None'}}</h3>
               <p>Show: </p>
               <form  id="arrangeForm" action="" method="GET">
                 @csrf
@@ -122,11 +122,11 @@
 
                       <td class="align-middle text-center text-sm">
                        @if($task->status_id == 1)
-                          <span class="badge badge-sm bg-gradient-info">Active</span>
+                          <span style="color: #70AD47;font-weight:bold">Active</span>
                         @elseif($task->status_id == 0)
-                          <span class="badge badge-sm bg-gradient-danger">Inactive</span>
+                          <span style="color: #FF0000;font-weight:bold">Inactive</span>
                         @elseif($task->status_id ==2)
-                          <span class="badge badge-sm bg-gradient-success">Completed</span>
+                          <span class="font-weight-bold text-secondary">Completed</span>
                         @endif
 
                       </td>
@@ -152,13 +152,13 @@
 
                           @if($task->status_id == 1 || $task->status_id == 2 || $task->status_id == 0)
                             @if(Auth::user()->getRoleNames()[0] == 'admin')
-                            <button class="btn btn-primary btn-xs archive" data-bs-toggle="modal" data-bs-target="#statusModal" value="{{$task->id.'|'.$task->status_id}}" style="width: fit-content">Change Status</button>
+                            <button class="btn btn-secondary btn-xs archive" data-bs-toggle="modal" data-bs-target="#statusModal" value="{{$task->id.'|'.$task->status_id}}" style="width: fit-content">Change Status</button>
 
                              <button class="btn btn-danger btn-xs delete"  data-bs-toggle="modal" data-bs-target="#deleteModal" value="{{$task->id}}" style="width: 80px">Delete</button>
 
                           @endif
-                             <button class="btn btn-primary btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" value="{{$task->id}}">Upload</button>
-                             <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-info btn-xs" style="width: 80px">View Task</a>
+                             <button class="btn btn-info btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" value="{{$task->id}}">Upload</button>
+                             <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn text-white btn-xs" style="width: 80px;background:#000000">View Task</a>
 
 
 
@@ -312,7 +312,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-primary">Yes</button>
+          <button type="submit" class="btn bg-secondary text-white">Chnage Status</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         </div>
         </form>
@@ -341,8 +341,8 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-primary">Yes</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn bg-danger text-white">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
         </form>
 

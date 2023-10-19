@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300  position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -55,13 +55,13 @@
                         <h6>Report description</h6>
                     </div>
                     @role('tasker')
-                    <a href="/tasker/{{ $find_project->id }}/task-list-tasker" style="height: fit-content" class="btn btn-danger btn-xs">Back to task list</a>
+                    <a href="/tasker/{{ $find_project->id }}/task-list-tasker" style="height: fit-content;background:#000000" class="btn text-white btn-xs" >Back To Task List</a>
                     @endrole
                     @role('admin')
-                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn btn-danger btn-xs" style="height: fit-content">Back to task list</a>
+                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn text-white btn-xs" style="height: fit-content;background:#000000">Back To Task List</a>
                     @endrole
                     @role('manager')
-                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn btn-danger btn-xs" style="height: fit-content">Back to task list</a>
+                    <a href="/admin/{{ $find_project->id }}/task-list" class="btn text-white btn-xs" style="height: fit-content;background:#000000">Back To Task List</a>
                     @endrole
 
 
@@ -89,24 +89,27 @@
                           ?>
 
                         </p>
-                        <button type="submit" class="btn btn-danger btn-xs">Download</button>
+                        <button type="submit" class="btn btn-dark btn-xs">Download</button>
                         <button type="button" class="btn btn-info btn-xs update_file" value="{{$file->id}}" data-bs-toggle="modal" data-bs-target="#updateFileModal">Update File</button>
-                         @if($file->user_id == Auth::id())
-                          <a href="{{route('delete_files',$file->id)}}" class="btn btn-default">
-                            Remove
-                          </a>
-                        @endif
+                        @if($file->user_id == Auth::id())
+                        <button type="button" class="btn btn-danger btn-xs remove-file"  data-bs-toggle="modal"
+                        data-bs-target="#deleteFile"
+                        value="{{ $file->id }}">
+                          REMOVE
+                        </button>
+                    @endif
+
                       </form>
 
                     @endforeach
 
 
-                  <button class="btn btn-primary btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" style="width: 90px;">Upload</button>
+                  <button class="btn btn-info btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" style="width: 90px;">Upload</button>
                   </p>
                   <br>
                   <br>
                    @if(Auth::user()->getRoleNames()[0] == 'admin')
-                    <button class="btn bg-gradient-dark btn-xs" value="{{Request::segment(3)}}" data-bs-toggle="modal" data-bs-target="#createSubModal">Add Subtask</button>
+                    <button class="btn btn-info btn-xs" value="{{Request::segment(3)}}" data-bs-toggle="modal" data-bs-target="#createSubModal">Add Subtask</button>
                   @endif
                   <br>
                   <br>
@@ -141,7 +144,7 @@
                       <input type="hidden" name="task_id" value="{{Request::segment(3)}}">
                       <textarea class="form-control" name="comment" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-info">Submit</button>
                   </form>
                 </div>
               </div>
@@ -152,6 +155,36 @@
 
     </div>
   </main>
+  <div class="modal" id="deleteFile">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title h6">Are you sure to delete?               </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form role="form" action="{{ route('delete_files') }}" method="POST">
+                @csrf
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    @csrf
+                    <input type="hidden" name="id" id="remove_file_id">
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger text-white">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
 <div class="modal" id="deleteModal">
   <div class="modal-dialog">
@@ -172,8 +205,8 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Submit</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger text-white">Delete</button>
+        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
       </div>
       </form>
 
@@ -350,6 +383,10 @@
       $(".update_file").click(function(){
           var file_id = $(this).val();
           $("#file_id").val(file_id);
+      });
+      $(".remove-file").click(function(){
+          var file_id = $(this).val();
+          $("#remove_file_id").val(file_id);
       });
 
     });

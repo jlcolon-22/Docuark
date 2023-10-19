@@ -22,7 +22,7 @@
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300 position-absolute w-100" style="background-color: #C70039"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -68,8 +68,8 @@
             <div class="card-header pb-0">
               <h6>Faculty Member Table</h6>
               @if (Auth::user()->getRoleNames()[0] == 'manager')
-              <button class="btn btn-info btn-xs edit" data-bs-toggle="modal"
-                  data-bs-target="#createModalUser">New user Profile</button>
+              <button class="btn btn-info btn-xs edit" style="background-color: #11CDEF" data-bs-toggle="modal"
+                  data-bs-target="#createModalUser">New User Profile</button>
           @endif
               {{-- <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#createModal">New user Profile</button> --}}
               @include('shared.notification')
@@ -117,13 +117,14 @@
 
 
                       <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-info" style="width: 300px">{{$user->department->name}}</span>
+                        {{-- <span class="badge badge-sm bg-gradient-info" style="width: 300px">{{$user->department->name}}</span> --}}
+                        {{$user->department->name}}
                       </td>
 
-                      {{-- <td class="align-middle">
-                        <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#editModal" value="{{$user->id}}" style="width: 80px">Edit</button>
+                      <td class="align-middle">
+                        {{-- <button class="btn btn-info btn-xs edit" data-bs-toggle="modal" data-bs-target="#editModal" value="{{$user->id}}" style="width: 80px">Edit</button> --}}
                         <button class="btn btn-danger btn-xs archive" value="{{$user->id}}" data-bs-toggle="modal" data-bs-target="#deleteModal" value="{{$user->id}}" style="width: 80px">Delete</button>
-                      </td> --}}
+                      </td>
                     </tr>
 
                     @endforeach
@@ -218,8 +219,8 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Submit</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger">Submit</button>
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
       </div>
       </form>
 

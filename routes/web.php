@@ -114,7 +114,7 @@ Route::group(['prefix'=> 'tasker','middleware'=> 'auth'], function(){
 
     //Delete comment and files
     Route::get('/delete-comment/{id}', [TaskerController::class, 'delete_comment'])->name('delete_comment');
-    Route::get('/delete-files/{id}', [TaskerController::class, 'delete_files'])->name('delete_files');
+    Route::post('/delete-files', [TaskerController::class, 'delete_files'])->name('delete_files');
 
 });
 

@@ -1,9 +1,8 @@
 @if(Session::has('success'))
-	<div class="alert alert-success">
+	<div class="alert  text-white text-bold" style="background: #2CCB8C">
 		{{Session::get('success')}}
 	</div>
 @endif
-
 
 @if(Session::has('error'))
 	<div class="alert alert-danger">

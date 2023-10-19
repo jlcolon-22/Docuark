@@ -82,7 +82,7 @@
                         @if($proj->status_id == 1)
                           <span class="badge badge-sm bg-gradient-success">Active</span>
                         @elseif($proj->status_id == 0)
-                          <span class="badge badge-sm bg-gradient-danger">Archived</span>
+                          <span class="badge badge-sm text-danger font-weight-bold">Archived</span>
                         @elseif($proj->status_id == 2)
                           <span class="badge badge-sm bg-gradient-secondary">Completed</span>
                         @endif

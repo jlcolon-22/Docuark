@@ -250,7 +250,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-primary">Submit</button>
+          <button type="submit" class="btn bg-info text-white">Submit</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         </div>
         </form>
@@ -294,7 +294,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-primary">Submit</button>
+          <button type="submit" class="btn bg-info text-white">Submit</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         </div>
         </form>
@@ -349,7 +349,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-primary">Submit</button>
+          <button type="submit" class="btn bg-info text-white">Submit</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         </div>
         </form>

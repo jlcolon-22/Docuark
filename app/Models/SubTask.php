@@ -15,4 +15,7 @@ class SubTask extends Model
     {
         return $this->hasOne(TaskFile::class);
     }
+    public function user(){
+        return $this->belongsTo(User::class,'updated_by','id');
+    }
 }

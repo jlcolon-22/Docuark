@@ -74,11 +74,11 @@
 
                       <td>
                         @if($proj->status_id == 1)
-                          <span class="badge badge-sm bg-gradient-success">Active</span>
+                          <span class="badge badge-sm text-success">Active</span>
                         @elseif($proj->status_id == 0)
-                          <span class="badge badge-sm bg-gradient-danger">Inactive</span>
+                          <span class="badge badge-sm text-danger">Inactive</span>
                         @elseif($proj->status_id == 2)
-                          <span class="badge badge-sm bg-gradient-secondary">Completed</span>
+                          <span class="badge badge-sm text-secondary">Completed</span>
                         @endif
 
                       </td>
@@ -90,7 +90,7 @@
 
                         @if($proj->status_id == 1)
 
-                          <a href="{{route('tasker_task_list',$proj->id)}}" class="btn btn-warning btn-xs">View</a>
+                          <a href="{{route('tasker_task_list',$proj->id)}}" class="btn text-white btn-xs" style="background: #000000">View</a>
 
                         @elseif($proj->status_id == 0)
                          N/A

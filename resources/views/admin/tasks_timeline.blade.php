@@ -98,7 +98,7 @@ text-wrap:wrap;
 
 
 
-                            <h3 class="text-center">{{ $find_assign_project->project->project_type }} to
+                            <h3 class="text-center">{{ $find_assign_project->project->project_type }}
                                 {{ isset($find_assign_project->department->name) ? 'Report of ' . $find_assign_project->department->name : 'None' }}
                             </h3>
 

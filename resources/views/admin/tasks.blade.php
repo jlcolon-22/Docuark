@@ -79,7 +79,7 @@
                 @endif
               @endif
 
-              <h3 class="text-center">{{$find_assign_project->project->project_type}} to {{isset($find_assign_project->department->name) ? ' Task of '.$find_assign_project->department->name : 'None'}}</h3>
+              <h3 class="text-center">{{$find_assign_project->project->project_type}}  {{isset($find_assign_project->department->name) ? ' Task of '.$find_assign_project->department->name : 'None'}}</h3>
               <p>Show: </p>
               <form  id="arrangeForm" action="" method="GET">
                 @csrf

@@ -49,7 +49,7 @@
             <div class="card-header pb-0">
               <div class="d-flex justify-content-between">
                 <h6>Project Lists</h6>
-                <a href="/tasker/home" class="btn btn-danger btn-xs">Back</a>
+                <a href="/tasker/home" class="btn text-white btn-xs" style="background: #000000">Back</a>
               </div>
               <h5>{{$department_name->name}}</h5>
               @include('shared.notification')
@@ -94,7 +94,7 @@
 
                           <a href="{{route('tasker_update_task',$task->id)}}" class="btn btn-secondary btn-xs">Finished</a>
 
-                          <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-info btn-xs">View</a>
+                          <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-xs text-white" style="background: #000000">View</a>
 
                         @elseif($task->status_id == 0)
                          N/A

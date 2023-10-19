@@ -1,5 +1,5 @@
 @if(Session::has('success'))
-	<div class="alert  text-white text-bold" style="background: #2CCB8C">
+	<div class="alert  text-white text-bold " style="background: #2CCB8C;with">
 		{{Session::get('success')}}
 	</div>
 @endif

@@ -89,7 +89,7 @@ text-wrap:wrap;
                                         Schedule</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active"
+                                    <a class="nav-link active"  style="border-bottom: 1px"
                                         href="{{ route('admin_task_timeline_list', Request::segment(2)) }}">Timeline of activities</a>
                                 </li>
 

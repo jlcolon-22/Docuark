@@ -53,7 +53,7 @@
                 </li>
                 @if (Auth::user()->getRoleNames()[0] != 'manager')
                 <li class="nav-item ">
-                    <a class="nav-link active" href="{{route('admin_task_file_list',Request::segment(2))}}">Task Files</a>
+                    <a class="nav-link active"  style="border-bottom: 1px" href="{{route('admin_task_file_list',Request::segment(2))}}">Task Files</a>
                   </li>
                   @endif
                 <li class="nav-item">

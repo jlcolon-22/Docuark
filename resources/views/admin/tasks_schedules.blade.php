@@ -59,7 +59,7 @@
                 </li>
                 @endif
                 <li class="nav-item">
-                  <a class="nav-link active" href="{{route('admin_task_schedule_list',Request::segment(2))}}">Task Schedule</a>
+                  <a class="nav-link active"  style="border-bottom: 1px" href="{{route('admin_task_schedule_list',Request::segment(2))}}">Task Schedule</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{route('admin_task_timeline_list',Request::segment(2))}}">Timeline of activities</a>

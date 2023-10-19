@@ -50,7 +50,7 @@
                <ul class="nav nav-tabs nav-justified">
 
                 <li class="nav-item">
-                  <a class="nav-link active" href="{{route('admin_task_list',Request::segment(2))}}">Task List</a>
+                  <a class="nav-link active" style="border-bottom: 1px" href="{{route('admin_task_list',Request::segment(2))}}">Task List</a>
                 </li>
 
                 @if (Auth::user()->getRoleNames()[0] != 'manager')

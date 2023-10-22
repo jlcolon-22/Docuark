@@ -312,8 +312,8 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn bg-secondary text-white">Change Status</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn bg-secondary text-white" style="width: 135px">Change Status</button>
+          <button type="button" class="btn btn-danger" style="width: 135px" data-bs-dismiss="modal">Close</button>
         </div>
         </form>
 

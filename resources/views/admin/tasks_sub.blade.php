@@ -256,11 +256,11 @@
                                             @foreach ($task->sub as $sub)
                                                 <tr>
                                                     <td>
-                                                        <div class="d-flex justify-content-end ">
+                                                        <div class="d-flex  ">
 
                                                             <div class="d-flex flex-column">
                                                                 <h6 class="mb-0 text-sm"
-                                                                    style="text-indent: 40px;text-align: right">
+                                                                    style="padding-left: 70px;text-align: left">
                                                                     {{ $sub->title }}</h6>
 
                                                             </div>
@@ -543,8 +543,8 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn bg-secondary text-white">Change Status</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn bg-secondary text-white" style="width: 135px">Change Status</button>
+                        <button type="button" class="btn btn-danger" style="width: 135px" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
 
@@ -572,8 +572,8 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn bg-secondary text-white">Change Status</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn bg-secondary text-white" style="width: 135px">Change Status</button>
+                        <button type="button" class="btn btn-danger" style="width: 135px" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
 

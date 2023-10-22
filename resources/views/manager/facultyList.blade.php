@@ -220,7 +220,7 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-danger">Submit</button>
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
       </form>
 
@@ -273,18 +273,19 @@
                             aria-label="Password" name="repeat_password" required>
                     </div>
 
-                    <div class="text-center">
+                    <div class="d-flex justify-content-end align-items-center gap-2 " >
                         <button type="submit"
-                            class="btn bg-gradient-dark w-100 my-4 mb-2 submit_user">Submit</button>
+                        style="width: fit-content" class="btn bg-info text-white submit_user">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                     </div>
 
 
                 </div>
 
                 <!-- Modal footer -->
-                <div class="modal-footer">
+                {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                </div>
+                </div> --}}
             </form>
 
         </div>

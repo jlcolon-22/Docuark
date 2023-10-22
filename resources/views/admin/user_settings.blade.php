@@ -65,7 +65,7 @@
                       <label>Repeat Password</label>
                       <input type="password" name="repeat_password" class="form-control">
                     </div>
-                    <button class="btn btn-info btn-block">CHANGE PASSWORD</button>
+                    <button class="btn btn-info btn-block">Change Password</button>
                   </form>
                 </div>
                 <div class="col-6">

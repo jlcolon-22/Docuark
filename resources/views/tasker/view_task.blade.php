@@ -332,7 +332,7 @@
           <input type="date" class="form-control" name="deadline" required >
         </div>
         <div class="mb-3">
-          <label>Report Type <span style="color: red; margin-bottom: -10px;">*</span></label>
+          <label>File Type <span style="color: red; margin-bottom: -10px;">*</span></label>
            <select class="form-select" required>
             @foreach($file_types as $file)
               <option>{{$file->name}}</option>
@@ -340,10 +340,10 @@
 
            </select>
           </div>
-        <div class="mb-3">
+        {{-- <div class="mb-3">
           <label>Report File <span style="color: gray; margin-bottom: -10px;">(optional)</span></label>
           <input type="file" name="task_file" class="form-control">
-        </div>
+        </div> --}}
 
         </div>
 

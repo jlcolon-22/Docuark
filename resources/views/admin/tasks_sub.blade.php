@@ -338,18 +338,20 @@
                                                         @endif
 
                                                         @if ($sub->status_id == 1 || $sub->status_id == 2 || $sub->status_id == 0)
-                                                            @if (Auth::user()->getRoleNames()[0] == 'admin')
+                                                            @if (Auth::user()->getRoleNames()[0] == 'admin' || Auth::user()->getRoleNames()[0] == 'manager' )
                                                                 <button class="btn btn-secondary btn-xs archiveSub"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#statusSubModal"
                                                                     value="{{ $sub->id . '|' . $sub->status_id }}"
                                                                     style="width: 110px">Change Status</button>
 
+                                                                @role('admin')
                                                                 <button class="btn btn-danger btn-xs deleteSub"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#deleteSubModal"
                                                                     value="{{ $sub->id }}"
                                                                     style="width: 110px">Delete</button>
+                                                                @endrole
                                                             @endif
                                                             {{-- <button class="btn btn-info btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" value="{{$sub->id}}" style="width: 110px">Upload</button>
                                                            <a href="{{route('share_view_task',['task_id' => $sub->id, 'project_id'=> Request::Segment(2)])}}" class="btn text-white btn-xs" style="width: 110px;background:#000000">View Task</a> --}}

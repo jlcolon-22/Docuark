@@ -151,10 +151,12 @@
                            @endif
 
                           @if($task->status_id == 1 || $task->status_id == 2 || $task->status_id == 0)
-                            @if(Auth::user()->getRoleNames()[0] == 'admin')
+                            @if(Auth::user()->getRoleNames()[0] == 'admin' || Auth::user()->getRoleNames()[0] == 'manager')
                             <button class="btn btn-secondary btn-xs archive" data-bs-toggle="modal" data-bs-target="#statusModal" value="{{$task->id.'|'.$task->status_id}}" style="width: 110px">Change Status</button>
 
+                             @role('admin')
                              <button class="btn btn-danger btn-xs delete"  data-bs-toggle="modal" data-bs-target="#deleteModal" value="{{$task->id}}" style="width: 110px">Delete</button>
+                             @endrole
 
                           @endif
                              <button class="btn btn-info btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" value="{{$task->id}}" style="width: 110px">Upload</button>

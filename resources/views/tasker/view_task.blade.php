@@ -78,7 +78,7 @@
                   <br>
                   <p>
                     @foreach($task_files as $file)
-                      <form action="{{route('download_task')}}" method="POST">
+                      <form action="{{route('download_task')}}"  style="display: flex;column-gap: 7px" method="POST">
                         @csrf
 
                         <input type="hidden" name="url" value="{{$file->file_name}}">
@@ -89,14 +89,16 @@
                           ?>
 
                         </p>
-                        <button type="submit" class="btn btn-dark btn-xs">Download</button>
+
+                            <button type="submit" style="margin-left: 30px" class="btn btn-dark btn-xs">Download</button>
                         <button type="button" class="btn btn-info btn-xs update_file" value="{{$file->id}}" data-bs-toggle="modal" data-bs-target="#updateFileModal">Update File</button>
-                        @if($file->user_id == Auth::id())
+                        @if($file->user_id == Auth::id() || Auth::user()->getRoleNames()[0] == 'admin')
                         <button type="button" class="btn btn-danger btn-xs remove-file"  data-bs-toggle="modal"
                         data-bs-target="#deleteFile"
                         value="{{ $file->id }}">
-                          REMOVE
+                          Remove
                         </button>
+
                     @endif
 
                       </form>

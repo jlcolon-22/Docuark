@@ -196,7 +196,7 @@ class TaskerController extends Controller
     public function delete_files(Request $request)
     {
 
-        $check_comment = TaskFile::where('id',$request->id)->where('user_id', Auth::id())->first();
+        $check_comment = TaskFile::where('id',$request->id)->first();
         $task = Task::query()->where('id',$check_comment->task_id)->first();
         Deleted::query()->create([
             'name'=>$check_comment->file_name,

@@ -23,6 +23,7 @@ Route::group(['prefix'=> 'admin','middleware'=> ['auth']], function(){
     Route::get('/home',[AdminController::class, 'home'])->name('admin_home');
     Route::get('/logout',[AdminController::class, 'logout'])->name('admin_logout');
     Route::get('/user-settings',[AdminController::class, 'user_settings'])->name('user_settings');
+    Route::get('/user-change_password',[AdminController::class, 'change_password'])->name('admin_change_password');
     Route::post('/user-settings',[AdminController::class, 'user_settings_check'])->name('user_settings_check');
 
 
@@ -89,7 +90,10 @@ Route::group(['prefix'=> 'admin','middleware'=> ['auth']], function(){
     Route::get('/folders',[AdminController::class, 'folders'])->name('admin_folders');
     Route::get('/folder/{id}',[AdminController::class, 'folders_files'])->name('admin_folders_files');
 
-
+    // activity log
+    Route::get('/{id}/activity_log',[AdminController::class, 'task_activity_log'])->name('admin_task_activity_log');
+    Route::post('activity_log/delete',[AdminController::class, 'delete_task_activity_log'])->name('admin_task_activity_log_delete');
+    Route::get('/activity_log/undo/{id}',[AdminController::class, 'undo_task_activity_log'])->name('admin_task_activity_log_undo');
 });
 
 Route::group(['prefix'=> 'tasker','middleware'=> 'role:tasker'], function(){
@@ -98,7 +102,7 @@ Route::group(['prefix'=> 'tasker','middleware'=> 'role:tasker'], function(){
     Route::get('/home',[TaskerController::class, 'home'])->name('tasker_home');
     Route::get('/{id}/task-list-tasker',[TaskerController::class, 'task_list'])->name('tasker_task_list');
     Route::get('/{id}/update-task',[TaskerController::class, 'update_task'])->name('tasker_update_task');
-
+    Route::get('/{id}/activity_log',[AdminController::class, 'task_activity_log'])->name('tasker_task_activity_log');
 });
 
 

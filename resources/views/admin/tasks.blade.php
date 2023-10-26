@@ -66,6 +66,15 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{{route('admin_task_timeline_list',Request::segment(2))}}">Timeline of activities</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{route('admin_task_activity_log',Request::segment(2))}}">
+                    @if (Auth::user()->getRoleNames()[0] == 'admin')
+                    Activity Log
+                    @else
+                    My Activity Log
+                    @endif
+                </a>
+                </li>
 
               </ul>
               <br>

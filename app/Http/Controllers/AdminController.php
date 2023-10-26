@@ -25,22 +25,56 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Activity_log;
 use PHPUnit\Framework\Constraint\Count;
 
 class AdminController extends Controller
 {
+    public function undo_task_activity_log(string $id)
+    {
+        Activity_log::where('id', $id)->restore();
+
+        return back();
+    }
+    public function delete_task_activity_log(Request $request)
+    {
+        Activity_log::where('id', $request->log_id)->delete();
+        return back();
+    }
+    public function task_activity_log($id)
+    {
+        $find_project = Project::find($id);
+
+        if (!$find_project) {
+            return abort(404);
+        }
+
+        $find_assign_project = ProjectDepartment::where('project_id', $id)->first();
+        $logs = Activity_log::withTrashed()->where('project_id', $id)->orderBy('id', 'desc')->get();
+
+        if (@$_GET['arrange_by'] == 'All-Actions') {
+            return view('admin.tasks_activity_log', compact('find_assign_project', 'find_project', 'logs'));
+        } else if (@$_GET['arrange_by'] == 'My-Actions') {
+            $logs = Activity_log::withTrashed()->where('project_id', $id)->where('user_id', Auth::id())->orderBy('id', 'desc')->get();
+            return view('admin.tasks_activity_log', compact('find_assign_project', 'find_project', 'logs'));
+        }
+
+        return view('admin.tasks_activity_log', compact('find_assign_project', 'find_project', 'logs'));
+    }
+
+
     public function admin_faculty_list()
     {
-        $users = User::query()->where('department_id',Auth::user()->department_id)->where('id','!=', Auth::user()->id)->get();
-        return view('manager.facultyList',compact('users'));
+        $users = User::query()->where('department_id', Auth::user()->department_id)->where('id', '!=', Auth::user()->id)->get();
+        return view('manager.facultyList', compact('users'));
     }
 
     public function home()
     {
         $positions = Position::all();
         $departments = Department::all();
-        $users = User::where('status_id',1)->get();
-        return view('admin.home',compact('users','positions','departments'));
+        $users = User::where('status_id', 1)->get();
+        return view('admin.home', compact('users', 'positions', 'departments'));
     }
 
     public function logout()
@@ -53,57 +87,51 @@ class AdminController extends Controller
     {
         $departments = Department::all();
 
-        if(Auth::user()->getRoleNames()[0] == 'manager')
-        {
-             $project_department = new Collection(DB::table('users')
-                        ->join('project_departments','users.department_id','=','project_departments.department_id')
-                        ->join('projects','project_departments.project_id','=','projects.id')
-                        ->join('departments','project_departments.department_id','=','departments.id')
-                        ->where('users.id', Auth::id())
-                        ->where('projects.status_id', '!=', 0)
-                        ->select('projects.id','projects.title','projects.description','projects.status_id','projects.created_at','projects.user_id','projects.project_type','projects.deadline','departments.name as department_name')
-                        ->get());
+        if (Auth::user()->getRoleNames()[0] == 'manager') {
+            $project_department = new Collection(DB::table('users')
+                ->join('project_departments', 'users.department_id', '=', 'project_departments.department_id')
+                ->join('projects', 'project_departments.project_id', '=', 'projects.id')
+                ->join('departments', 'project_departments.department_id', '=', 'departments.id')
+                ->where('users.id', Auth::id())
+                ->where('projects.status_id', '!=', 0)
+                ->select('projects.id', 'projects.title', 'projects.description', 'projects.status_id', 'projects.created_at', 'projects.user_id', 'projects.project_type', 'projects.deadline', 'departments.name as department_name')
+                ->get());
 
-            $projects_created = new Collection(Project::where('user_id', Auth::id())->select('projects.id','projects.title','projects.description','projects.status_id','projects.created_at','projects.user_id','projects.project_type','projects.deadline')->get());
+            $projects_created = new Collection(Project::where('user_id', Auth::id())->select('projects.id', 'projects.title', 'projects.description', 'projects.status_id', 'projects.created_at', 'projects.user_id', 'projects.project_type', 'projects.deadline')->get());
 
 
 
             $projects =  $projects_created->merge($project_department);
-
-
-        }else
-        {
-               $projects = Project::where('status_id',1)->orWhere('status_id',2)
-                        ->join('project_departments','projects.id','=','project_departments.project_id')
-                        ->join('departments','project_departments.department_id','=','departments.id')
-                        ->select('projects.id','projects.status_id','projects.created_at','projects.project_type','projects.deadline','projects.title','departments.name as department_name')
-                        ->get();
+        } else {
+            $projects = Project::where('status_id', 1)->orWhere('status_id', 2)
+                ->join('project_departments', 'projects.id', '=', 'project_departments.project_id')
+                ->join('departments', 'project_departments.department_id', '=', 'departments.id')
+                ->select('projects.id', 'projects.status_id', 'projects.created_at', 'projects.project_type', 'projects.deadline', 'projects.title', 'departments.name as department_name')
+                ->get();
         }
 
         $report_types = ReportType::all();
 
-        return view('admin.projects',compact('projects','departments','report_types'));
+        return view('admin.projects', compact('projects', 'departments', 'report_types'));
     }
 
     public function archive_projects()
     {
-        if(Auth::user()->getRoleNames()[0] == 'manager_limited')
-        {
-            $projects = Project::where('status_id', 0)->where('user_id',Auth::id())->get();
-        }else{
+        if (Auth::user()->getRoleNames()[0] == 'manager_limited') {
+            $projects = Project::where('status_id', 0)->where('user_id', Auth::id())->get();
+        } else {
             $projects = Project::where('status_id', 0)->get();
         }
 
-        return view('admin.archive_projects',compact('projects'));
+        return view('admin.archive_projects', compact('projects'));
     }
 
     public function restore_projects($id)
     {
         $find = Project::find($id);
-        if($find)
-        {
-            $find->update(['status_id'=> 1]);
-            return back()->with('success','Project Restore Successfully');
+        if ($find) {
+            $find->update(['status_id' => 1]);
+            return back()->with('success', 'Project Restore Successfully');
         }
     }
 
@@ -116,40 +144,36 @@ class AdminController extends Controller
     {
         $find_user = User::find($request->user_id);
 
-        if($request->password == null){
+        if ($request->password == null) {
             $find_user->position_id     = 99;
             $find_user->department_id   = $request->department;
             $find_user->first_name      = $request->first_name;
             $find_user->last_name       = $request->last_name;
             $find_user->email           = $request->email;
-            $find_user->username        = strtolower($request->first_name.'.'.$request->last_name);
-        }else
-        {
+            $find_user->username        = strtolower($request->first_name . '.' . $request->last_name);
+        } else {
             $find_user->position_id     = 99;
             $find_user->department_id   = $request->department;
             $find_user->first_name      = $request->first_name;
             $find_user->last_name       = $request->last_name;
             $find_user->email           = $request->email;
             $find_user->password        = bcrypt($request->password);
-            $find_user->username        = strtolower($request->first_name.'.'.$request->last_name);
-
+            $find_user->username        = strtolower($request->first_name . '.' . $request->last_name);
         }
 
         $find_user->save();
 
-        return back()->with('success','Updated Successfully');
-
+        return back()->with('success', 'Updated Successfully');
     }
 
     public function deleteUser(Request $request)
     {
         $find_user = User::find($request->user_id);
-        if($find_user)
-        {
+        if ($find_user) {
             $find_user->delete();
         }
 
-        return back()->with('success','Deleted Successfully');
+        return back()->with('success', 'Deleted Successfully');
     }
 
     public function createProjects(Request $request)
@@ -166,72 +190,63 @@ class AdminController extends Controller
 
         $this->assignProject($proj->id, $request->department_id);
 
-        return back()->with('success','Created Successfully');
+        return back()->with('success', 'Created Successfully');
     }
 
     public function changeProjectStatus(Request $request)
     {
         $find_project = Project::find($request->project_id);
 
-        if(!$find_project)
-        {
-            return back()->with('error','Project Not Found');
+        if (!$find_project) {
+            return back()->with('error', 'Project Not Found');
         }
 
-        if($find_project->status_id == 1)
-        {
+        if ($find_project->status_id == 1) {
             $status_id = 0;
-        }else if($find_project->status_id == 0)
-        {
+        } else if ($find_project->status_id == 0) {
             $status_id = 1;
-        }else if($find_project->status_id == 2)
-        {
+        } else if ($find_project->status_id == 2) {
             $status_id = 0;
         }
 
-        $find_project->update(['status_id'=> $status_id]);
+        $find_project->update(['status_id' => $status_id]);
 
-        return back()->with('success','Status Updated Successfully');
+        return back()->with('success', 'Status Updated Successfully');
     }
 
     public function changeProjectStatus1(Request $request)
     {
-         $find_project = Project::find($request->project_id);
+        $find_project = Project::find($request->project_id);
 
-        if(!$find_project)
-        {
-            return back()->with('error','Project Not Found');
+        if (!$find_project) {
+            return back()->with('error', 'Project Not Found');
         }
 
-        if($find_project->status_id == 1)
-        {
+        if ($find_project->status_id == 1) {
             $status_id = 0;
-        }else if($find_project->status_id == 0)
-        {
+        } else if ($find_project->status_id == 0) {
             $status_id = 1;
-        }else if($find_project->status_id == 2)
-        {
+        } else if ($find_project->status_id == 2) {
             $status_id = 1;
         }
 
-        $find_project->update(['status_id'=> $status_id]);
+        $find_project->update(['status_id' => $status_id]);
 
-        return back()->with('success','Status Updated Successfully');
+        return back()->with('success', 'Status Updated Successfully');
     }
 
     public function findProjects(Request $request)
     {
         $find_project = Project::find($request->project_id);
-        return response()->json( $find_project );
+        return response()->json($find_project);
     }
 
     public function updateProjects(Request $request)
     {
         $find_project = Project::find($request->project_id);
 
-        if(!$find_project)
-        {
-            return back()->with('error','Project Not Found');
+        if (!$find_project) {
+            return back()->with('error', 'Project Not Found');
         }
 
         $find_project->update([
@@ -239,58 +254,49 @@ class AdminController extends Controller
             'description'   => $request->description
         ]);
 
-        return back()->with('success','Project Updated Successfully');
+        return back()->with('success', 'Project Updated Successfully');
     }
 
     public function task_list($id)
     {
         $find_project = Project::find($id);
 
-        if(!$find_project)
-        {
+        if (!$find_project) {
             return abort(404);
         }
 
         $tasks = Task::where('project_id', $id)->get();
         $departments = Department::all();
-        $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
+        $find_assign_project = ProjectDepartment::where('project_id', $id)->first();
         $file_types = FileType::all();
 
-        if(@$_GET['arrange_by'] == 'Normal')
-        {
-            return view('admin.tasks',compact('find_project','tasks','departments','find_assign_project','file_types'));
-
-        }else if(@$_GET['arrange_by'] == 'Sub-Task')
-        {
-            return view('admin.tasks_sub',compact('find_project','tasks','departments','find_assign_project','file_types'));
-
+        if (@$_GET['arrange_by'] == 'Normal') {
+            return view('admin.tasks', compact('find_project', 'tasks', 'departments', 'find_assign_project', 'file_types'));
+        } else if (@$_GET['arrange_by'] == 'Sub-Task') {
+            return view('admin.tasks_sub', compact('find_project', 'tasks', 'departments', 'find_assign_project', 'file_types'));
         }
 
-        return view('admin.tasks',compact('find_project','tasks','departments','find_assign_project','file_types'));
-
-
+        return view('admin.tasks', compact('find_project', 'tasks', 'departments', 'find_assign_project', 'file_types'));
     }
 
     public function create_task(Request $request)
     {
 
-        $path = public_path($request->title.'/');
+        $path = public_path($request->title . '/');
 
-        if(!File::isDirectory($path)){
+        if (!File::isDirectory($path)) {
             File::makeDirectory($path, 0777, true, true);
-
         }
 
-       if(isset($request->task_file))
-       {
+        if (isset($request->task_file)) {
             $cover = $request->file('task_file')->getClientOriginalName();
             $file_size = $request->file('task_file')->getSize();
 
-            $url = Storage::putFileAs('public', $request->file('task_file'),$cover);
-       }else {
-        $url = 'null';
-        $file_size = 'null';
-       }
+            $url = Storage::putFileAs('public', $request->file('task_file'), $cover);
+        } else {
+            $url = 'null';
+            $file_size = 'null';
+        }
 
 
 
@@ -308,7 +314,7 @@ class AdminController extends Controller
         $task_file->user_id     = Auth::id();
         $task_file->file_name   = $url;
         $task_file->type     = $request->file_type;
-        $task_file->size     =$file_size;
+        $task_file->size     = $file_size;
         $task_file->save();
 
         $new_folder = new TaskFirstFolder;
@@ -316,36 +322,42 @@ class AdminController extends Controller
         $new_folder->user_id = Auth::id();
         $new_folder->folder_name = $request->title;
         $new_folder->save();
+        $project = Project::find($task->project_id);
+        Activity_log::query()
+            ->create([
+                'task_id' => $task->id,
+                'project_id' => $project->id,
+                'user_id' => Auth::id(),
+                'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Added new Task ' . '"' . $task->title . '"'
+            ]);
 
-
-        return back()->with('success','Task Created Successfully');
+        return back()->with('success', 'Task Created Successfully');
     }
 
     public function folders()
     {
-        $folders = TaskFirstFolder::where('user_id',Auth::id())->get();
-        return view('admin.folders',compact('folders'));
+        $folders = TaskFirstFolder::where('user_id', Auth::id())->get();
+        return view('admin.folders', compact('folders'));
     }
 
     public function folders_files(Task $id)
     {
         // ->where('user_id',Auth::id())
-        $folder_files = TaskFile::where('task_id',$id->id)->where('size','!=','null')->get();
+        $folder_files = TaskFile::where('task_id', $id->id)->where('size', '!=', 'null')->get();
         $project_id = $id->project_id;
 
-        return view('admin.folder_files',compact('folder_files','project_id'));
+        return view('admin.folder_files', compact('folder_files', 'project_id'));
     }
 
     public function create_sub_task(Request $request)
     {
-        if(isset($request->task_file))
-       {
+        if (isset($request->task_file)) {
             $cover = $request->file('task_file')->getClientOriginalName();;
 
-            $url = Storage::putFileAs('public', $request->file('task_file'),$cover);
-       }else {
-        $url = 'null';
-       }
+            $url = Storage::putFileAs('public', $request->file('task_file'), $cover);
+        } else {
+            $url = 'null';
+        }
 
         $task = new SubTask;
         $task->task_id   = $request->task_id;
@@ -355,20 +367,28 @@ class AdminController extends Controller
         $task->deadline     = $request->deadline;
         $task->updated_by   = Auth::id();
         $task->save();
-
-        return back()->with('success','Sub Task Created Successfully');
+        $tasks = Task::find($task->task_id);
+        $project = Project::find($tasks->project_id);
+        Activity_log::query()
+            ->create([
+                'task_id' => $tasks->id,
+                'project_id' => $project->id,
+                'user_id' => Auth::id(),
+                'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' added a subtask to Task ' . '"' . $tasks->title . '"'
+            ]);
+        return back()->with('success', 'Sub Task Created Successfully');
     }
 
     public function findTask(Request $request)
     {
         $find_task = Task::find($request->task_id);
-        return response()->json( $find_task );
+        return response()->json($find_task);
     }
 
     public function findSubTask(Request $request)
     {
         $find_sub = SubTask::find($request->sub_id);
-        return response()->json( $find_sub );
+        return response()->json($find_sub);
     }
 
 
@@ -378,9 +398,8 @@ class AdminController extends Controller
 
         $find_task = Task::find($request->task_id);
 
-        if(!$find_task)
-        {
-            return back()->with('error','Task Not Found');
+        if (!$find_task) {
+            return back()->with('error', 'Task Not Found');
         }
 
         $find_task->update([
@@ -390,7 +409,7 @@ class AdminController extends Controller
             'updated_by'    => Auth::id()
         ]);
 
-        return back()->with('success','Task Updated Successfully');
+        return back()->with('success', 'Task Updated Successfully');
     }
 
     public function updateSubTask(Request $request)
@@ -398,9 +417,8 @@ class AdminController extends Controller
 
         $find_task = SubTask::find($request->sub_id);
 
-        if(!$find_task)
-        {
-            return back()->with('error','SubTask Not Found');
+        if (!$find_task) {
+            return back()->with('error', 'SubTask Not Found');
         }
 
         $find_task->update([
@@ -410,98 +428,101 @@ class AdminController extends Controller
             'updated_by'    => Auth::id()
         ]);
 
-        return back()->with('success','SubTask Updated Successfully');
+        return back()->with('success', 'SubTask Updated Successfully');
     }
 
     public function changeTasktStatus(Request $request)
     {
         $find_task = Task::find($request->task_id);
 
-        if(!$find_task)
-        {
-            return back()->with('error','Task Not Found');
+        if (!$find_task) {
+            return back()->with('error', 'Task Not Found');
         }
 
-        if($find_task->status_id == 1)
-        {
+        if ($find_task->status_id == 1) {
             $status_id = 0;
-        }else if($find_task->status_id == 0)
-        {
+        } else if ($find_task->status_id == 0) {
             $status_id = 1;
-        }else if($find_task->status_id ==2)
-        {
+        } else if ($find_task->status_id == 2) {
             $status_id = 0;
         }
 
-        $find_task->update(['status_id'=> $status_id]);
+        $find_task->update(['status_id' => $status_id]);
 
-        return back()->with('success','Status Updated Successfully');
+        return back()->with('success', 'Status Updated Successfully');
     }
 
     public function changeSubTasktStatus(Request $request)
     {
         $find_task = SubTask::find($request->sub_id);
 
-        if(!$find_task)
-        {
-            return back()->with('error','SubTask Not Found');
+        if (!$find_task) {
+            return back()->with('error', 'SubTask Not Found');
         }
 
-        if($find_task->status_id == 1)
-        {
+        if ($find_task->status_id == 1) {
             $status_id = 0;
-        }else if($find_task->status_id == 0)
-        {
+        } else if ($find_task->status_id == 0) {
             $status_id = 1;
         }
 
-        $find_task->update(['status_id'=> $status_id]);
+        $find_task->update(['status_id' => $status_id]);
 
-        return back()->with('success','Status Updated Successfully');
+        return back()->with('success', 'Status Updated Successfully');
     }
 
     public function deleteTask(Request $request)
     {
         $find_task = Task::find($request->task_id);
+        $project = Project::find($find_task->project_id);
         // File::deleteDirectory(public_path($find_task->title));
-        if(!$find_task)
-        {
-            return back()->with('error','Task Not Found');
+        if (!$find_task) {
+            return back()->with('error', 'Task Not Found');
         }
         Deleted::query()->create([
-            'name'=>$find_task->title,
-            'type'=>true,
-            'user_id'=>Auth::user()->id,
-            'compalation_id'=>$find_task->project_id,
+            'name' => $find_task->title,
+            'type' => true,
+            'user_id' => Auth::user()->id,
+            'compalation_id' => $find_task->project_id,
         ]);
-        TaskFirstFolder::query()->where('task_id',$request->task_id)->delete();
+        Activity_log::query()
+            ->create([
+                'task_id' => $find_task->id,
+                'project_id' => $project->id,
+                'user_id' => Auth::id(),
+                'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Deleted Task' . ' "' . $find_task->title . '"'
+            ]);
+        TaskFirstFolder::query()->where('task_id', $request->task_id)->delete();
         $find_task->delete();
 
 
-        return back()->with('success','Task deleted Successfully');
-
+        return back()->with('success', 'Task deleted Successfully');
     }
 
     public function deleteSubTask(Request $request)
     {
         $find_task = SubTask::find($request->sub_id);
-
-        if(!$find_task)
-        {
-            return back()->with('error','SubTask Not Found');
+        $task = Task::find($find_task->task_id);
+        $project = Project::find($task->project_id);
+        if (!$find_task) {
+            return back()->with('error', 'SubTask Not Found');
         }
-
+        Activity_log::query()
+            ->create([
+                'task_id' => $task->id,
+                'user_id' => Auth::id(),
+                'project_id' => $project->id,
+                'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Deleted SubTask' . ' "' . $find_task->title . '" from task' . ' "' . $task->title . '"'
+            ]);
         $find_task->delete();
-        return back()->with('success','SubTask deleted Successfully');
-
+        return back()->with('success', 'SubTask deleted Successfully');
     }
 
     public function assignProject($project_id, $department_id)
     {
-        $check_assign = ProjectDepartment::where('project_id',$project_id)->where('department_id',$department_id)->first();
-        if($check_assign)
-        {
-          return back()->with('error','Project Already Assigned in this departments');
+        $check_assign = ProjectDepartment::where('project_id', $project_id)->where('department_id', $department_id)->first();
+        if ($check_assign) {
+            return back()->with('error', 'Project Already Assigned in this departments');
         }
         $assign = new ProjectDepartment;
         $assign->project_id     = $project_id;
@@ -509,7 +530,7 @@ class AdminController extends Controller
         $assign->user_id        = Auth::id(); //created_by
         $assign->save();
 
-        return back()->with('success','Project Assigned Successfully');
+        return back()->with('success', 'Project Assigned Successfully');
     }
 
     public function assignTask(Request $request)
@@ -520,14 +541,13 @@ class AdminController extends Controller
     public function completedProject(Request $request)
     {
         $find_project = Project::find($request->project_id);
-        if(!$find_project)
-        {
+        if (!$find_project) {
             return back()->with('error', 'Project Does not exist');
         }
 
-        $find_project->update(['status_id'=> 2]);
-        Task::where('project_id', $find_project->id)->update(['status_id'=>2]);
-        return back()->with('success',$find_project->title.' has been marked as Completed!');
+        $find_project->update(['status_id' => 2]);
+        Task::where('project_id', $find_project->id)->update(['status_id' => 2]);
+        return back()->with('success', $find_project->title . ' has been marked as Completed!');
     }
 
     public function system_maintenance()
@@ -538,38 +558,35 @@ class AdminController extends Controller
         $report_types = ReportType::all();
         $file_types = FileType::all();
 
-        return view('admin.maintenance',compact('roles','departments','positions','report_types','file_types'));
+        return view('admin.maintenance', compact('roles', 'departments', 'positions', 'report_types', 'file_types'));
     }
 
     public function createDepartment(Request $request)
     {
-       Department::create(['name'=> $request->name]);
-       return back()->with('success', 'Department Created Successfully');
+        Department::create(['name' => $request->name]);
+        return back()->with('success', 'Department Created Successfully');
     }
 
     public function createPosition(Request $request)
     {
-        Position::create(['name'=> $request->name]);
+        Position::create(['name' => $request->name]);
         return back()->with('success', 'Department Created Successfully');
     }
 
     public function delete_department($id)
     {
-        $users = User::where('department_id',$id)->get();
-        if(count($users) > 0)
-        {
+        $users = User::where('department_id', $id)->get();
+        if (count($users) > 0) {
             foreach ($users as $key => $value) {
                 $value->delete();
             }
         }
-        $projects = Project::query()->where('department_id',$id)->get();
-        if(count($projects) > 0)
-        {
+        $projects = Project::query()->where('department_id', $id)->get();
+        if (count($projects) > 0) {
             foreach ($projects as $key => $value) {
-                Task::query()->where('project_id',$value->id)->delete();
+                Task::query()->where('project_id', $value->id)->delete();
                 $value->delete();
             }
-
         }
         Department::where('id', $id)->delete();
         return back()->with('success', 'Department Deleted Successfully');
@@ -591,10 +608,10 @@ class AdminController extends Controller
     {
 
         $get_positions = DB::table('assigns')
-                        ->join('positions','positions.id','=','assigns.position_id')
-                        ->where('assigns.department_id', $request->department_id)
-                        ->select('assigns.id as id','assigns.position_id as position_id','positions.name as position_name')
-                        ->get();
+            ->join('positions', 'positions.id', '=', 'assigns.position_id')
+            ->where('assigns.department_id', $request->department_id)
+            ->select('assigns.id as id', 'assigns.position_id as position_id', 'positions.name as position_name')
+            ->get();
 
         return response()->json($get_positions);
     }
@@ -602,11 +619,11 @@ class AdminController extends Controller
     public function position_create(Request $request)
     {
         $get_roles = DB::table('assigns')
-                        ->join('roles','roles.id','=','assigns.role_id')
-                        ->where('assigns.department_id', $request->department_id)
-                        ->where('assigns.position_id', $request->position_id)
-                        ->select('assigns.id as id','assigns.role_id as role_id','roles.name as role_name')
-                        ->first();
+            ->join('roles', 'roles.id', '=', 'assigns.role_id')
+            ->where('assigns.department_id', $request->department_id)
+            ->where('assigns.position_id', $request->position_id)
+            ->select('assigns.id as id', 'assigns.role_id as role_id', 'roles.name as role_name')
+            ->first();
 
         return response()->json($get_roles);
     }
@@ -614,7 +631,7 @@ class AdminController extends Controller
     public function createReportType(Request $request)
     {
 
-        ReportType::create(['name'=> $request->name]);
+        ReportType::create(['name' => $request->name]);
         return back()->with('success', 'Report Type Created Successfully');
     }
 
@@ -626,7 +643,7 @@ class AdminController extends Controller
 
     public function createFileType(Request $request)
     {
-        FileType::create(['name'=> $request->name]);
+        FileType::create(['name' => $request->name]);
         return back()->with('success', 'File Type Created Successfully');
     }
 
@@ -638,31 +655,29 @@ class AdminController extends Controller
 
     public function task_file_list($id)
     {
-       $find_project = Project::find($id);
+        $find_project = Project::find($id);
 
 
-        if(!$find_project)
-        {
+        if (!$find_project) {
             return abort(404);
         }
-        $tasks = Task::query()->where('project_id',$find_project->id)->get();
+        $tasks = Task::query()->where('project_id', $find_project->id)->get();
 
-       $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
-    //     $tasks = Task::where('project_id', $id)->with('task_files')->get();
+        $find_assign_project = ProjectDepartment::where('project_id', $id)->first();
+        //     $tasks = Task::where('project_id', $id)->with('task_files')->get();
         $folders = array();
         foreach ($tasks as $key => $value) {
-            $folders[] = TaskFirstFolder::where('task_id',$value->id)->first();
+            $folders[] = TaskFirstFolder::where('task_id', $value->id)->first();
         }
 
-        return view('admin.tasks_files',compact('find_project','folders','find_assign_project'));
+        return view('admin.tasks_files', compact('find_project', 'folders', 'find_assign_project'));
     }
 
     public function task_schedule_list($id)
     {
         $find_project = Project::find($id);
 
-        if(!$find_project)
-        {
+        if (!$find_project) {
             return abort(404);
         }
 
@@ -670,40 +685,44 @@ class AdminController extends Controller
 
 
 
-       $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
+        $find_assign_project = ProjectDepartment::where('project_id', $id)->first();
 
-        return view('admin.tasks_schedules',compact('find_project','find_assign_project','tasks'));
+        return view('admin.tasks_schedules', compact('find_project', 'find_assign_project', 'tasks'));
     }
 
     public function task_timeline_list($id)
     {
         $find_project = Project::find($id);
 
-        if(!$find_project)
-        {
+        if (!$find_project) {
             return abort(404);
         }
 
-        $tasks= Task::where('project_id', $id)->get();
+        $tasks = Task::where('project_id', $id)->get();
         $comments = array();
         $task_files = array();
         foreach ($tasks as $value) {
-            $comments[] = Comment::where('task_id',$value['id'])->orderBy('id','desc')->with('user')->get();
+            $comments[] = Comment::where('task_id', $value['id'])->orderBy('id', 'desc')->with('user')->get();
 
-            $task_files[] = TaskFile::where('task_id',$value->id)->where('file_name','!=','null')->with('user')->get();
+            $task_files[] = TaskFile::where('task_id', $value->id)->where('file_name', '!=', 'null')->with('user')->get();
         }
 
-        $deleted = Deleted::query()->where('compalation_id',$find_project->id)->get();
-       $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
+        $deleted = Deleted::query()->where('compalation_id', $find_project->id)->get();
+        $find_assign_project = ProjectDepartment::where('project_id', $id)->first();
 
 
-        return view('admin.tasks_timeline',compact('find_project','find_assign_project','tasks','comments','task_files','deleted'));
+        return view('admin.tasks_timeline', compact('find_project', 'find_assign_project', 'tasks', 'comments', 'task_files', 'deleted'));
     }
 
     public function user_settings()
     {
         return view('admin.user_settings');
     }
+    public function change_password()
+    {
+        return view('admin.change_password');
+    }
+
 
     public function user_settings_check(Request $request)
     {
@@ -713,10 +732,43 @@ class AdminController extends Controller
         ]);
 
         $find_user = User::find(Auth::id());
-        $find_user->update([
-            'password'=> bcrypt($request->password)
-        ]);
+        if ($find_user->login_status == false) {
+            if (Auth::user()->getRoleNames()[0] == 'admin') {
 
+                $find_user->update([
+                    'password' => bcrypt($request->password),
+                    'login_status' => true
+                ]);
+                return redirect()->route('admin_home');
+
+            } else if (Auth::user()->getRoleNames()[0] == 'manager') {
+                $find_user->update([
+                    'password' => bcrypt($request->password),
+                    'login_status' => true
+                ]);
+
+                return redirect()->route('admin_projects');
+            } else if (Auth::user()->getRoleNames()[0] == 'tasker') {
+                $find_user->update([
+                    'password' => bcrypt($request->password),
+                    'login_status' => true
+                ]);
+
+                return redirect()->route('tasker_home');
+            } else if (Auth::user()->getRoleNames()[0] == 'manager_limited') {
+                $find_user->update([
+                    'password' => bcrypt($request->password),
+                    'login_status' => true
+                ]);
+
+                return redirect()->route('admin_projects');
+            }
+        }
+
+        $find_user->update([
+            'password' => bcrypt($request->password),
+            'login_status' => true
+        ]);
         return back()->with('success', 'Password Updated Successfully');
     }
 
@@ -729,8 +781,8 @@ class AdminController extends Controller
             'last_name' => ['required'],
             // 'position' => ['required'],
             //'department' => ['required'],
-            'password' => ['required','max:20'],
-            'repeat_password' => ['required','same:password'],
+            'password' => ['required', 'max:20'],
+            'repeat_password' => ['required', 'same:password'],
         ]);
 
 
@@ -740,7 +792,7 @@ class AdminController extends Controller
         $user->department_id    = Auth::user()->department_id;
         $user->first_name       = strtolower($validatedData['first_name']);
         $user->last_name        = strtolower($validatedData['last_name']);
-        $user->username         = strtolower($validatedData['first_name'].'.'.$validatedData['last_name']);
+        $user->username         = strtolower($validatedData['first_name'] . '.' . $validatedData['last_name']);
         $user->email            = $validatedData['email'];
         $user->password         = bcrypt($validatedData['password']);
         $user->status_id        = 0;
@@ -749,15 +801,13 @@ class AdminController extends Controller
         $user->assignRole('tasker');
         Mail::to('jlcolon368@gmail.com')->send(new NewUser($validatedData, $user->id));
         return back()->with('success', 'User Created Successfully');
-
     }
 
     public function delete_all_projects(Request $request)
     {
         $find = Project::find($request->project_id);
-        if( $find )
-        {
-            Task::where('project_id',$find->id)->delete();
+        if ($find) {
+            Task::where('project_id', $find->id)->delete();
             $find->delete();
 
             return back()->with('success', 'Project and other data related has been Deleted Successfully');

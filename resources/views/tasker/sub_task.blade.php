@@ -51,28 +51,7 @@
                 <h6>Project Lists</h6>
                 <a href="/tasker/home" class="btn text-white btn-xs" style="background: #000000">Back</a>
               </div>
-              <ul class="nav nav-tabs nav-justified">
-
-                <li class="nav-item">
-                  <a class="nav-link active" style="border-bottom: 1px" href="{{route('tasker_task_list',Request::segment(2))}}">Task List</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{route('tasker_task_activity_log',Request::segment(2))}}">
-                    @if (Auth::user()->getRoleNames()[0] == 'admin')
-                    Activity Log
-                    @else
-                    My Activity Log
-                    @endif
-                </a>
-                </li>
-
-              </ul>
-
-
-              <br>
-              <h3 class="text-center">{{ $find_assign_project->project->project_type }}
-                {{ isset($find_assign_project->department->name) ? 'Report of ' . $find_assign_project->department->name : 'None' }}
-            </h3>
+              <h5>{{$department_name->name}}</h5>
               <p>Show: </p>
               <form  id="arrangeForm" action="" method="GET">
                 @csrf
@@ -100,9 +79,17 @@
                     @foreach($tasks as $task)
                     <tr>
 
-                      <td>
-                        {{$task->title}}
-                      </td>
+                        <td>
+                            <div class="d-flex  ">
+
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-0 "
+                                     >
+                                        {{ $task->title }}</h6>
+
+                                </div>
+                            </div>
+                        </td>
 
                       <td>
                         @if($task->status_id == 1)
@@ -142,7 +129,85 @@
                       </td>
 
                     </tr>
+                    @foreach ($task->sub as $sub)
+                    <tr>
+                        <td>
+                            <div class="d-flex  ">
 
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-0 text-sm"
+                                        style="padding-left: 70px;text-align: left">
+                                        {{ $sub->title }}</h6>
+
+                                </div>
+                            </div>
+                        </td>
+
+
+
+                            <td>
+                                @if($sub->status_id == 1)
+                                  <span class="badge badge-sm text-success font-weight-bold">Active</span>
+                                @elseif($sub->status_id == 0)
+                                  <span class="badge badge-sm text-danger font-weight-bold" style="">Inactive</span>
+                                @elseif($sub->status_id == 2)
+                                  <span class="badge badge-sm text-secondary font-weight-bold">Completed</span>
+                                @endif
+
+                              </td>
+
+                        <td class="align-middle text-center">
+                            <span
+                                class="text-secondary text-xs font-weight-bold">{{ $sub->created_at }}</span>
+                        </td>
+
+
+
+
+                        <td class="align-middle">
+
+
+                            @if (Auth::user()->getRoleNames()[0] == 'admin')
+                                <button class="btn btn-info btn-xs updateSub"
+                                    style="width: 110px" data-bs-toggle="modal"
+                                    data-bs-target="#subModal"
+                                    value="{{ $sub->id }}">Edit</button>
+                            @endif
+
+                            @if ($sub->status_id == 1 || $sub->status_id == 2 || $sub->status_id == 0)
+                                @if (Auth::user()->getRoleNames()[0] == 'admin' || Auth::user()->getRoleNames()[0] == 'manager' )
+                                    <button class="btn btn-secondary btn-xs archiveSub"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#statusSubModal"
+                                        value="{{ $sub->id . '|' . $sub->status_id }}"
+                                        style="width: 110px">Change Status</button>
+
+                                    @role('admin')
+                                    <button class="btn btn-danger btn-xs deleteSub"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteSubModal"
+                                        value="{{ $sub->id }}"
+                                        style="width: 110px">Delete</button>
+                                    @endrole
+                                @endif
+                                {{-- <button class="btn btn-info btn-xs upload" data-bs-toggle="modal" data-bs-target="#uploadModal" value="{{$sub->id}}" style="width: 110px">Upload</button>
+                               <a href="{{route('share_view_task',['task_id' => $sub->id, 'project_id'=> Request::Segment(2)])}}" class="btn text-white btn-xs" style="width: 110px;background:#000000">View Task</a> --}}
+                            @elseif($sub->status_id == 0)
+                                <button class="btn btn-success btn-xs archive"
+                                    data-bs-toggle="modal" data-bs-target="#statusModal"
+                                    value="{{ $sub->id }}"
+                                    style="width: 110px">Activate</button>
+                            @endif
+
+
+
+
+
+
+
+                        </td>
+                    </tr>
+                     @endforeach
                     @endforeach
 
                   </tbody>
@@ -184,7 +249,6 @@
     </div>
   </div>
 </div>
-
 <div class="modal" id="uploadModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -230,6 +294,8 @@
         </div>
     </div>
 </div>
+
+
   <!--   Core JS Files   -->
   <script src="{{URL::to('/assets/js/core/popper.min.js')}}"></script>
   <script src="{{URL::to('/assets/js/core/bootstrap.min.js')}}"></script>
@@ -255,6 +321,7 @@
         var arrange = $(this).val();
         $("#arrangeForm").submit();
       });
+
       $(".upload").click(function(){
         var task_id = $(this).val();
         $("#task_list_id").val(task_id);

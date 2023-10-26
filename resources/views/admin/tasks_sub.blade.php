@@ -72,6 +72,15 @@
                                         href="{{ route('admin_task_timeline_list', Request::segment(2)) }}">Timeline of
                                         activities</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{route('admin_task_activity_log',Request::segment(2))}}">
+                                        @if (Auth::user()->getRoleNames()[0] == 'admin')
+                                        Activity Log
+                                        @else
+                                        My Activity Log
+                                        @endif
+                                    </a>
+                                  </li>
 
                             </ul>
                             <br>
@@ -141,17 +150,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                {{-- <td class="align-middle text-center text-sm">
-                                                    @if ($task->status_id == 1)
-                                                        <span style="color: #70AD47;font-weight:bold">Active</span>
-                                                    @elseif($task->status_id == 0)
-                                                        <span style="color: #FF0000;font-weight:bold">Inactive</span>
-                                                    @elseif($task->status_id == 3)
-                                                        <span
-                                                            class="badge badge-sm bg-gradient-success">Completed</span>
-                                                    @endif
 
-                                                </td> --}}
                                                 <td class="align-middle text-center text-sm">
                                                     @if ($task->status_id == 1)
                                                         <span style="color: #70AD47;font-weight:bold">Active</span>
@@ -179,35 +178,7 @@
                                                     <span
                                                         class="text-secondary text-xs font-weight-bold">{{ $task->updated_at }}</span>
                                                 </td>
-                                                {{-- <td class="align-middle">
 
-                                                    @if ($find_assign_project->project->status_id == 1)
-                                                        <button class="btn btn-info btn-xs updateProject"
-                                                            data-bs-toggle="modal" data-bs-target="#editModal"
-                                                            value="{{ $task->id }}">Edit</button>
-
-                                                        @if ($task->status_id == 1)
-                                                            <button class="btn btn-primary btn-xs archive"
-                                                                data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                                value="{{ $task->id }}">Archive</button>
-
-                                                            <a href="{{ route('share_view_task', ['task_id' => $task->id, 'project_id' => Request::Segment(2)]) }}"
-                                                                class="btn text-white btn-xs"
-                                                                style="background:#000000">View Task</a>
-
-                                                            <button class="btn btn-danger btn-xs delete"
-                                                                data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                                value="{{ $task->id }}">Delete</button>
-                                                        @elseif($task->status_id == 0)
-                                                            <button class="btn btn-success btn-xs archive"
-                                                                data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                                value="{{ $task->id }}">Activate</button>
-                                                        @endif
-                                                    @endif
-
-
-
-                                                </td> --}}
                                                 <td class="align-middle">
 
 

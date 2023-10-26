@@ -50,6 +50,7 @@
             <div class="card-header pb-0">
               <h6>Lists of Reports</h6>
               <h5>{{$department_name->name}}</h5>
+
               @include('shared.notification')
             </div>
             <div class="card-body px-0 pt-0 pb-2">

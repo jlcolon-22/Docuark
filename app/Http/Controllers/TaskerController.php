@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Deadline;
-use App\Mail\FileUpload;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\Project;
+use Carbon\Carbon;
 use App\Models\Task;
-use App\Models\Department;
+use App\Models\User;
+use App\Mail\Deadline;
 use App\Models\Comment;
 use App\Models\Deleted;
-use Illuminate\Support\Facades\Storage;
-use App\Models\TaskFile;
+use App\Models\Project;
+use App\Mail\FileUpload;
 use App\Models\FileType;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Models\TaskFile;
+use App\Models\Department;
+use App\Models\Activity_log;
+use Illuminate\Http\Request;
+use App\Models\ProjectDepartment;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class TaskerController extends Controller
 {
@@ -38,15 +40,63 @@ class TaskerController extends Controller
 
     public function task_list($id)
     {
-        $tasks = DB::table('tasks')
-                ->join('project_departments','tasks.project_id','=','project_departments.project_id')
-                ->where('tasks.project_id', $id)
-                ->where('project_departments.department_id', Auth::user()->department_id)
-                ->select('tasks.id','tasks.title','tasks.description','tasks.created_at','tasks.status_id')
-                ->get();
-        $department_name = Department::find(Auth::user()->department_id);
+        // $tasks = DB::table('tasks')
+        //         ->join('project_departments','tasks.project_id','=','project_departments.project_id')
+        //         ->where('tasks.project_id', $id)
+        //         ->where('project_departments.department_id', Auth::user()->department_id)
+        //         ->select('tasks.id','tasks.title','tasks.description','tasks.created_at','tasks.status_id')
+        //         ->get();
+         $find_project = Project::find($id);
 
-        return view('tasker.task',compact('tasks','department_name'));
+        if(!$find_project)
+        {
+            return abort(404);
+        }
+
+        $tasks = Task::where('project_id', $id)->get();
+        $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
+        $department_name = Department::find(Auth::user()->department_id);
+          if(@$_GET['arrange_by'] == 'Normal')
+        {
+            return view('tasker.task',compact('tasks','department_name','find_assign_project'));
+
+        }else if(@$_GET['arrange_by'] == 'Sub-Task')
+        {
+            return view('tasker.sub_task',compact('tasks','department_name','find_assign_project'));
+
+
+        }
+        return view('tasker.task',compact('tasks','department_name','find_assign_project'));
+
+        // $find_project = Project::find($id);
+
+        // if(!$find_project)
+        // {
+        //     return abort(404);
+        // }
+
+        // $tasks = Task::where('project_id', $id)->get();
+        // $departments = Department::all();
+        // $find_assign_project = ProjectDepartment::where('project_id',$id)->first();
+        // $file_types = FileType::all();
+
+        // if(@$_GET['arrange_by'] == 'Normal')
+        // {
+        //     return view('admin.tasks',compact('find_project','tasks','departments','find_assign_project','file_types'));
+
+        // }else if(@$_GET['arrange_by'] == 'Sub-Task')
+        // {
+        //     return view('admin.tasks_sub',compact('find_project','tasks','departments','find_assign_project','file_types'));
+
+        // }
+
+        // return view('admin.tasks',compact('find_project','tasks','departments','find_assign_project','file_types'));
+
+
+
+
+
+        // return view('tasker.task',compact('tasks','department_name'));
     }
 
     public function update_task($id)
@@ -134,7 +184,7 @@ class TaskerController extends Controller
 
         $task = Task::where('id', $request->task_id)->first();
         $task->update(['updated_by'=> Auth::id()]);
-        $project = Project::query()->select('department_id','title')->where('id',$task->project_id)->first();
+        $project = Project::query()->select('department_id','title','id')->where('id',$task->project_id)->first();
         $data = [
             'filename'=>explode('/',$url)[1],
             'user'=>Auth::user()->email,
@@ -145,6 +195,13 @@ class TaskerController extends Controller
         $admins = User::whereHas('roles', function($q) {
             $q->where('roles.name','admin');
         })->get('email');
+        Activity_log::query()
+                    ->create([
+                        'task_id'=>$task->id,
+                        'project_id'=>$project->id,
+                        'user_id'=>Auth::id(),
+                        'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' uploaded a file to Task '.'"'.$task->title.'"'
+                    ]);
         foreach($admins as $v)
 
         {
@@ -174,8 +231,17 @@ class TaskerController extends Controller
 
             $url = Storage::putFileAs('public', $request->file('task_file'),$cover);
 
-            Task::where('id', $request->task_id)->update(['updated_by'=> Auth::id()]);
+            $task = Task::where('id', $request->task_id)->update(['updated_by'=> Auth::id()]);
+            $tasks = Task::find($request->task_id);
 
+            $project = Project::find($tasks->project_id);
+            Activity_log::query()
+            ->create([
+                'task_id'=>$tasks->id,
+                'project_id'=>$project->id,
+                'user_id'=>Auth::id(),
+                'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' Updated File "'.explode('/',$check_task->file_name)[1].'" from task "'.$tasks->title.'"'
+            ]);
             $check_task->update(['user_id'=> Auth::id(),'file_name' => $url]);
             return back()->with('success','Task Files Uploaded Successfully');
 
@@ -198,11 +264,19 @@ class TaskerController extends Controller
 
         $check_comment = TaskFile::where('id',$request->id)->first();
         $task = Task::query()->where('id',$check_comment->task_id)->first();
+        $project = Project::where('id',$task->project_id)->first();
         Deleted::query()->create([
             'name'=>$check_comment->file_name,
             'user_id'=>Auth::user()->id,
             'compalation_id'=>$task->project_id,
         ]);
+        Activity_log::query()
+                    ->create([
+                        'task_id'=>$task->id,
+                        'project_id'=>$project->id,
+                        'user_id'=>Auth::id(),
+                        'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' Deleted File '.'"'.explode('/',$check_comment->file_name)[1].'" from task "'.$task->title.'"'
+                    ]);
         $check_comment->delete();
         return back()->with('success','File Remove Successfully');
     }

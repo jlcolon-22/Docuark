@@ -44,15 +44,31 @@ class AuthController extends Controller
 
             if( Auth::user()->getRoleNames()[0] == 'admin')
             {
+                if(Auth::user()->login_status == false)
+                {
+                    return redirect()->route('admin_change_password');
+                }
                 return redirect()->route('admin_home');
             }else if( Auth::user()->getRoleNames()[0] == 'manager')
             {
+                if(Auth::user()->login_status == false)
+                {
+                    return redirect()->route('admin_change_password');
+                }
                 return redirect()->route('admin_projects');
             }else if( Auth::user()->getRoleNames()[0] == 'tasker')
             {
+                if(Auth::user()->login_status == false)
+                {
+                    return redirect()->route('admin_change_password');
+                }
                 return redirect()->route('tasker_home');
             }else if(Auth::user()->getRoleNames()[0] == 'manager_limited')
             {
+                if(Auth::user()->login_status == false)
+                {
+                    return redirect()->route('admin_change_password');
+                }
                 return redirect()->route('admin_projects');
             }
         }else

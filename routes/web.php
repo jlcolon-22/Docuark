@@ -102,6 +102,7 @@ Route::group(['prefix'=> 'tasker','middleware'=> 'role:tasker'], function(){
     Route::get('/home',[TaskerController::class, 'home'])->name('tasker_home');
     Route::get('/{id}/task-list-tasker',[TaskerController::class, 'task_list'])->name('tasker_task_list');
     Route::get('/{id}/update-task',[TaskerController::class, 'update_task'])->name('tasker_update_task');
+    Route::get('/{id}/update-sub-task',[TaskerController::class, 'update_sub_task'])->name('tasker_update_sub_task');
     Route::get('/{id}/activity_log',[AdminController::class, 'task_activity_log'])->name('tasker_task_activity_log');
 });
 

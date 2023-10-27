@@ -7,6 +7,7 @@ use App\Models\Task;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\SubTask;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -171,6 +172,94 @@ class Deadline extends Command
                     'deadline'=>'1 day before the deadline'
                 ];
                 Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+            }
+
+        }
+        $sub_tasks = SubTask::get();
+        foreach($sub_tasks as $sub)
+        {
+            $deadline = Carbon::parse($sub->deadline);
+            $deadline->toDateString();
+            $diff = $deadline->diffInDays(Carbon::now()->toDateString());
+            $task = Task::where('id',$sub->task_id)->first();
+            $project = Project::select('title','department_id')->where('id',$task->project_id)->first();
+            if($diff == 7)
+            {
+                $data = [
+                    'type'=>'SUB TASK',
+                    'title'=>$project->title.'('.$task->title.') ('.$sub->title.')',
+                    'deadline'=>'1 Week before the deadline'
+                ];
+                $admins = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','admin');
+                })->get('email');
+                foreach($admins as $admin)
+                {
+
+                    Mail::to($admin['email'])->send(new \App\Mail\Deadline($data));
+                }
+                $departmens = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','!=','admin');
+                })->where('department_id',$project->department_id)->get('email');
+                foreach ($departmens as $value) {
+                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                }
+            }
+            if($diff == 3)
+            {
+                // $data = [
+                //     'type'=>'TASK',
+                //     'title'=>$project->title.'('.$v->title.')',
+                //     'deadline'=>'3 days before the deadline'
+                // ];
+                // Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                $data = [
+                    'type'=>'SUB TASK',
+                    'title'=>$project->title.'('.$task->title.') ('.$sub->title.')',
+                    'deadline'=>'3 days before the deadline'
+                ];
+                $admins = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','admin');
+                })->get('email');
+                foreach($admins as $admin)
+                {
+
+                    Mail::to($admin['email'])->send(new \App\Mail\Deadline($data));
+                }
+                $departmens = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','!=','admin');
+                })->where('department_id',$project->department_id)->get('email');
+                foreach ($departmens as $value) {
+                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                }
+            }
+            if($diff == 1)
+            {
+                // $data = [
+                //     'type'=>'TASK',
+                //     'title'=>$project->title.'('.$v->title.')',
+                //     'deadline'=>'1 day before the deadline'
+                // ];
+                // Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                $data = [
+                    'type'=>'SUB TASK',
+                    'title'=>$project->title.'('.$task->title.') ('.$sub->title.')',
+                    'deadline'=>'1 day before the deadline'
+                ];
+                $admins = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','admin');
+                })->get('email');
+                foreach($admins as $admin)
+                {
+
+                    Mail::to($admin['email'])->send(new \App\Mail\Deadline($data));
+                }
+                $departmens = User::whereHas('roles', function($q) {
+                    $q->where('roles.name','!=','admin');
+                })->where('department_id',$project->department_id)->get('email');
+                foreach ($departmens as $value) {
+                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                }
             }
 
         }

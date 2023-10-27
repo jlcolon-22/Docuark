@@ -91,7 +91,7 @@
 
                         @if($proj->status_id == 1)
 
-                          <a href="{{route('tasker_task_list',$proj->id)}}" class="btn text-white btn-xs" style="background: #000000">View</a>
+                          <a href="{{route('tasker_task_list',$proj->id)}}" class="btn text-white btn-xs" style="background: #000000">View Task</a>
 
                         @elseif($proj->status_id == 0)
                          N/A

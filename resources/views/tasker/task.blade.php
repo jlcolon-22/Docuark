@@ -73,7 +73,7 @@
               <h3 class="text-center">{{ $find_assign_project->project->project_type }}
                 {{ isset($find_assign_project->department->name) ? 'Report of ' . $find_assign_project->department->name : 'None' }}
             </h3>
-              <p>Show: </p>
+              <p>Arrange By: </p>
               <form  id="arrangeForm" action="" method="GET">
                 @csrf
                 <select id="arrangeSelect" name="arrange_by">
@@ -124,7 +124,7 @@
 
                           <a href="{{route('tasker_update_task',$task->id)}}" class="btn btn-secondary btn-xs">Finished</a>
 
-                          <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-xs text-white" style="background: #000000">View</a>
+                          <a href="{{route('share_view_task',['task_id' => $task->id, 'project_id'=> Request::Segment(2)])}}" class="btn btn-xs text-white" style="background: #000000">View  Task</a>
 
                         @elseif($task->status_id == 0)
                          N/A

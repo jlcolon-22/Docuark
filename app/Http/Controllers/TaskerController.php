@@ -16,6 +16,7 @@ use App\Models\Department;
 use App\Models\Activity_log;
 use Illuminate\Http\Request;
 use App\Models\ProjectDepartment;
+use App\Models\SubTask;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -97,6 +98,14 @@ class TaskerController extends Controller
 
 
         // return view('tasker.task',compact('tasks','department_name'));
+    }
+
+    public function update_sub_task($id)
+    {
+        $sub = SubTask::where('id',$id)->update([
+            'status_id'=>2
+        ]);
+        return back();
     }
 
     public function update_task($id)

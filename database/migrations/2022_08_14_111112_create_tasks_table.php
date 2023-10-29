@@ -22,6 +22,7 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->unsignedBigInteger('updated_by');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

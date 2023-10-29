@@ -93,7 +93,7 @@ Route::group(['prefix'=> 'admin','middleware'=> ['auth']], function(){
     // activity log
     Route::get('/{id}/activity_log',[AdminController::class, 'task_activity_log'])->name('admin_task_activity_log');
     Route::post('activity_log/delete',[AdminController::class, 'delete_task_activity_log'])->name('admin_task_activity_log_delete');
-    Route::get('/activity_log/undo/{id}',[AdminController::class, 'undo_task_activity_log'])->name('admin_task_activity_log_undo');
+    Route::get('/activity_log/undo/{id}/{category}',[AdminController::class, 'undo_task_activity_log'])->name('admin_task_activity_log_undo');
 });
 
 Route::group(['prefix'=> 'tasker','middleware'=> 'role:tasker'], function(){

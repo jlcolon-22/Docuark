@@ -21,6 +21,7 @@ class CreateSubTasksTable extends Migration
             $table->string('deadline');
             $table->text('description');
             $table->unsignedBigInteger('updated_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

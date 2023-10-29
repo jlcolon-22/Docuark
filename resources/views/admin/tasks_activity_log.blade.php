@@ -175,28 +175,29 @@
                                                         {{ date_format($log->created_at, 'Y/m/d h:i A') }}</td>
                                                     <td style="font-size:14px;font-weight:600">{{ $log->message }}</td>
                                                     <td style="font-size:14px">
-                                                        @if (Auth::user()->getRoleNames()[0] == 'admin')
-                                                            @if ($log->deleted_at == null)
-                                                                <button type="button"
-                                                                    class="btn btn-danger btn-xs remove-log"
-                                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                                    value="{{ $log->id }}">
-                                                                    Delete
-                                                                </button>
-                                                            @else
+                                                        @if (Auth::user()->getRoleNames()[0] == 'admin' && $log->type == 1)
+                                                        @if ($log->deleted_at == null)
+
+                                                        <a href="/admin/activity_log/undo/{{ $log->id }}/{{ $log->category }}"
+                                                            class="btn btn-info btn-xs">
+                                                            Undo
+                                                        </a>
+                                                        @endif
+{{--
                                                                 @if (\Carbon\Carbon::now()->diffInMinutes($log->deleted_at) <= 2)
                                                                     <a href="/admin/activity_log/undo/{{ $log->id }}"
                                                                         class="btn btn-info btn-xs">
                                                                         Undo
                                                                     </a>
-                                                                @endif
-                                                            @endif
+                                                                @endif --}}
+
+
                                                         @endif
                                                     </td>
                                                 </tr>
                                             @endif
                                             @if (Auth::user()->getRoleNames()[0] == 'manager' && Auth::id() == $log->user_id)
-                                                @if ($log->deleted_at == null)
+
                                                     <tr>
                                                         <td style="font-size:14px">
                                                             {{ date_format($log->created_at, 'Y/m/d h:i A') }}</td>
@@ -216,10 +217,10 @@
                                                             </td>
                                                         @endif
                                                     </tr>
-                                                @endif
+
                                             @endif
                                             @if (Auth::user()->getRoleNames()[0] == 'tasker' && Auth::id() == $log->user_id)
-                                            @if ($log->deleted_at == null)
+
                                                 <tr>
                                                     <td style="font-size:14px">
                                                         {{ date_format($log->created_at, 'Y/m/d h:i A') }}</td>
@@ -239,7 +240,7 @@
                                                         </td>
                                                     @endif
                                                 </tr>
-                                            @endif
+
                                         @endif
                                         @endforeach
                                     </tbody>

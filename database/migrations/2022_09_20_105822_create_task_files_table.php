@@ -18,6 +18,7 @@ class CreateTaskFilesTable extends Migration
             $table->unsignedBigInteger('task_id');
             $table->unsignedBigInteger('user_id');
             $table->string('file_name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

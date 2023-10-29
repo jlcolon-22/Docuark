@@ -10,9 +10,11 @@ class Activity_log extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'task_id',
+        'type_id',
         'project_id',
         'user_id',
-        'message'
+        'message',
+        'type',
+        'category'
     ];
 }

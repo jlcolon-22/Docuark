@@ -30,9 +30,24 @@ use PHPUnit\Framework\Constraint\Count;
 
 class AdminController extends Controller
 {
-    public function undo_task_activity_log(string $id)
+    public function undo_task_activity_log(string $id ,string $category)
     {
-        Activity_log::where('id', $id)->restore();
+        $activity = Activity_log::where('id', $id)->first();
+        if($category == "delete_task")
+        {
+           Task::where('id',$activity->type_id)->restore();
+           $activity->delete();
+        }
+        if($category == "delete_file")
+        {
+           TaskFile::where('id',$activity->type_id)->restore();
+           $activity->delete();
+        }
+        if($category == "delete_sub")
+        {
+           SubTask::where('id',$activity->type_id)->restore();
+           $activity->delete();
+        }
 
         return back();
     }
@@ -325,7 +340,7 @@ class AdminController extends Controller
         $project = Project::find($task->project_id);
         Activity_log::query()
             ->create([
-                'task_id' => $task->id,
+                'type_id' => $task->id,
                 'project_id' => $project->id,
                 'user_id' => Auth::id(),
                 'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Added new Task ' . '"' . $task->title . '"'
@@ -371,7 +386,8 @@ class AdminController extends Controller
         $project = Project::find($tasks->project_id);
         Activity_log::query()
             ->create([
-                'task_id' => $tasks->id,
+                'type_id' => $task->id,
+
                 'project_id' => $project->id,
                 'user_id' => Auth::id(),
                 'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' added a subtask to Task ' . '"' . $tasks->title . '"'
@@ -487,12 +503,14 @@ class AdminController extends Controller
         ]);
         Activity_log::query()
             ->create([
-                'task_id' => $find_task->id,
+                'type_id' => $find_task->id,
+                'category'=>'delete_task',
+                'type'=>1,
                 'project_id' => $project->id,
                 'user_id' => Auth::id(),
                 'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Deleted Task' . ' "' . $find_task->title . '"'
             ]);
-        TaskFirstFolder::query()->where('task_id', $request->task_id)->delete();
+        // TaskFirstFolder::query()->where('task_id', $request->task_id)->delete();
         $find_task->delete();
 
 
@@ -509,7 +527,9 @@ class AdminController extends Controller
         }
         Activity_log::query()
             ->create([
-                'task_id' => $task->id,
+                'type_id' => $find_task->id,
+                'type'=>1,
+                'category'=>'delete_sub',
                 'user_id' => Auth::id(),
                 'project_id' => $project->id,
                 'message' => ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) . ' Deleted SubTask' . ' "' . $find_task->title . '" from task' . ' "' . $task->title . '"'

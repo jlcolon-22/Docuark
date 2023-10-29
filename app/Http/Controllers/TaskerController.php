@@ -206,7 +206,8 @@ class TaskerController extends Controller
         })->get('email');
         Activity_log::query()
                     ->create([
-                        'task_id'=>$task->id,
+                        'type_id'=>$task->id,
+
                         'project_id'=>$project->id,
                         'user_id'=>Auth::id(),
                         'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' uploaded a file to Task '.'"'.$task->title.'"'
@@ -246,7 +247,7 @@ class TaskerController extends Controller
             $project = Project::find($tasks->project_id);
             Activity_log::query()
             ->create([
-                'task_id'=>$tasks->id,
+                'type_id'=>$tasks->id,
                 'project_id'=>$project->id,
                 'user_id'=>Auth::id(),
                 'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' Updated File "'.explode('/',$check_task->file_name)[1].'" from task "'.$tasks->title.'"'
@@ -281,7 +282,9 @@ class TaskerController extends Controller
         ]);
         Activity_log::query()
                     ->create([
-                        'task_id'=>$task->id,
+                        'type_id'=>$check_comment->id,
+                        'type'=>1,
+                        'category'=>'delete_file',
                         'project_id'=>$project->id,
                         'user_id'=>Auth::id(),
                         'message'=> ucfirst(Auth::user()->first_name).' '.ucfirst(Auth::user()->last_name). ' Deleted File '.'"'.explode('/',$check_comment->file_name)[1].'" from task "'.$task->title.'"'

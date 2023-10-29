@@ -15,10 +15,12 @@ class CreateActivityLogsTable extends Migration
     {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('task_id')->nullable();
+            $table->unsignedBigInteger('type_id')->nullable();
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('message');
+            $table->boolean('type')->default(0);
+            $table->string('category')->default('add_upload');
             $table->softDeletes();
             $table->timestamps();
         });

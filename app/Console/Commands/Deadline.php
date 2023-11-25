@@ -64,7 +64,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$v->department_id)->get('email');
                 foreach ($departmens as $value) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
                 }
 
                 $admins = User::whereHas('roles', function($q) {
@@ -99,7 +99,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$v->department_id)->get('email');
                 foreach ($departmens as $v) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($v['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
             if($diff == 1)
@@ -121,7 +121,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$v->department_id)->get('email');
                 foreach ($departmens as $v) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($v['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
 
@@ -152,7 +152,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$project->department_id)->get('email');
                 foreach ($departmens as $value) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
             if($diff == 3)
@@ -162,7 +162,9 @@ class Deadline extends Command
                     'title'=>$project->title.'('.$v->title.')',
                     'deadline'=>'3 days before the deadline'
                 ];
-                Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                foreach ($departmens as $value) {
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
+                }
             }
             if($diff == 1)
             {
@@ -171,7 +173,9 @@ class Deadline extends Command
                     'title'=>$project->title.'('.$v->title.')',
                     'deadline'=>'1 day before the deadline'
                 ];
-                Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                foreach ($departmens as $value) {
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
+                }
             }
 
         }
@@ -202,7 +206,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$project->department_id)->get('email');
                 foreach ($departmens as $value) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
             if($diff == 3)
@@ -230,7 +234,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$project->department_id)->get('email');
                 foreach ($departmens as $value) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
             if($diff == 1)
@@ -258,7 +262,7 @@ class Deadline extends Command
                     $q->where('roles.name','!=','admin');
                 })->where('department_id',$project->department_id)->get('email');
                 foreach ($departmens as $value) {
-                    Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Deadline($data));
+                    Mail::to($value['email'])->send(new \App\Mail\Deadline($data));
                 }
             }
 

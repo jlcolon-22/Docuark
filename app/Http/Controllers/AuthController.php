@@ -163,7 +163,7 @@ class AuthController extends Controller
             return 'Invalid User Type';
         }
 
-        Mail::to('jlcolon368@gmail.com')->send(new NewUser($validatedData, $user->id));
+        Mail::to($user->email)->send(new NewUser($validatedData, $user->id));
 
         return back()->with('success','Successfully Registered');
 

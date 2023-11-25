@@ -164,7 +164,7 @@ class TaskerController extends Controller
             $q->where('roles.name','!=','admin');
         })->where('department_id',$project->department_id)->get('email');
         foreach ($departmens as $v) {
-            Mail::to('jlcolon368@gmail.com')->send(new \App\Mail\Comment($data));
+            Mail::to($v->email)->send(new \App\Mail\Comment($data));
         }
 
         return back()->with('success','Comment Successfully.');
@@ -222,7 +222,7 @@ class TaskerController extends Controller
             $q->where('roles.name','!=','admin');
         })->where('department_id',$project->department_id)->get('email');
         foreach ($departmens as $v) {
-            Mail::to('jlcolon368@gmail.com')->send(new FileUpload($data));
+            Mail::to($v->email)->send(new FileUpload($data));
         }
 
 

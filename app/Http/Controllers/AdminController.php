@@ -819,7 +819,7 @@ class AdminController extends Controller
         $user->save();
 
         $user->assignRole('tasker');
-        Mail::to('jlcolon368@gmail.com')->send(new NewUser($validatedData, $user->id));
+        Mail::to($user->email)->send(new NewUser($validatedData, $user->id));
         return back()->with('success', 'User Created Successfully');
     }
 
